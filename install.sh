@@ -256,8 +256,11 @@ chmod +x "$INSTALL_DIR/Penguins.sh"
 echo -e "${GREEN}  ✓ Launcher created${NC}"
 
 # Add to Steam
+# Find the real Steam user ID (not "0" which is a special directory)
 STEAM_USERDATA="$HOME/.steam/steam/userdata"
-STEAM_USER_ID=$(ls "$STEAM_USERDATA" 2>/dev/null | grep -E '^[0-9]+$' | head -1)
+STEAM_USER_ID=$(ls "$STEAM_USERDATA" 2>/dev/null | grep -E '^[0-9]+$' | grep -v '^0$' | head -1)
+# Fall back to "0" if no other user found (new install)
+[ -z "$STEAM_USER_ID" ] && STEAM_USER_ID=$(ls "$STEAM_USERDATA" 2>/dev/null | grep -E '^[0-9]+$' | head -1)
 
 if [ -n "$STEAM_USER_ID" ]; then
     SHORTCUTS_FILE="$STEAM_USERDATA/$STEAM_USER_ID/config/shortcuts.vdf"
