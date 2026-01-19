@@ -6,7 +6,7 @@ Works in **Game Mode** with controller, trackpad, and touch screen!
 
 ## Quick Install
 
-Open a terminal (Konsole) and run:
+Open a terminal (Konsole) in Desktop Mode and run:
 
 ```bash
 curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/install.sh | bash
@@ -23,17 +23,21 @@ cd penguins-steamdeck
 ## What It Does
 
 1. Downloads Penguins! from [Archive.org](https://archive.org/details/penguins2006)
-2. Extracts to `~/Games/Penguins/`
-3. Creates a launcher script that works with Wine or Proton
-4. Adds desktop shortcut
+2. Installs Visual C++ 2005 Runtime (required for WildTangent games)
+3. Sets up WildTangent registry keys
+4. Configures 1280x800 resolution for Steam Deck
+5. Creates a Proton-compatible launcher with display fixes
+6. **Automatically adds to Steam** - no manual setup needed!
 
-## Playing in Game Mode
+## Playing
 
 After installing:
 
-1. **Add to Steam**: Steam → Games → Add a Non-Steam Game
-2. **Browse to**: `~/Games/Penguins/Penguins.sh`
-3. **Set Controller Layout**: Use "Gamepad with Mouse Trackpad" or create custom
+1. **Switch to Game Mode** (or restart Steam in Desktop Mode)
+2. **Find "Penguins!"** in your Steam library
+3. **Play!** Use touch screen for best experience
+
+> **Note:** The game works best in **Game Mode**. Desktop Mode (Wayland) may have display issues with this old DirectX 8 game.
 
 ### Recommended Controller Mapping
 
@@ -76,8 +80,17 @@ Try running from terminal to see errors:
 ~/Games/Penguins/Penguins.sh
 ```
 
-### Black screen
-Press F to toggle fullscreen, or try windowed mode.
+### Invisible window / No display in Desktop Mode
+This is a known issue with old DirectX 8 games on Wayland (KDE Plasma).
+**Solution:** Switch to Game Mode - GameScope handles this properly.
+
+### Runtime error
+The installer automatically installs VC++ 2005 Runtime. If you still get errors:
+```bash
+# Reinstall the game
+rm -rf ~/Games/Penguins
+./install.sh
+```
 
 ## Credits
 

@@ -1,12 +1,17 @@
 #!/bin/bash
 # ============================================
-# 🐧 Penguins! - One-Click Steam Deck Installer
+# 🐧 Penguins! - Steam Deck Installer
 # ============================================
-# Downloads, installs, AND adds to Steam automatically!
+# One-click installer for Game Mode!
 #
-# Usage:
-#   curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/install.sh | bash
-#   or just double-click the .desktop file
+# Fixes applied:
+# - vcrun2005 runtime (fixes runtime error)
+# - WildTangent registry keys
+# - PROTON_USE_WINED3D for display compatibility
+# - Resolution config for 800p
+#
+# Usage: ./install.sh
+# Then switch to Game Mode and play!
 # ============================================
 
 set -e
@@ -22,29 +27,45 @@ NC='\033[0m'
 # Configuration
 GAME_NAME="Penguins!"
 INSTALL_DIR="$HOME/Games/Penguins"
-WINE_PREFIX="$INSTALL_DIR/prefix"
 DOWNLOAD_URL="https://archive.org/download/penguins2006/Penguins%21.zip"
+VCRUN_URL="https://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x86.EXE"
 TEMP_DIR="/tmp/penguins_install"
 
-# Show banner
+# Find best Proton
+find_proton() {
+    # Prefer GE-Proton, then newer Proton versions
+    for p in \
+        "$HOME/.steam/steam/compatibilitytools.d/GE-Proton"*/proton \
+        "$HOME/.steam/steam/steamapps/common/Proton - Experimental/proton" \
+        "$HOME/.steam/steam/steamapps/common/Proton 9"*/proton \
+        "$HOME/.steam/steam/steamapps/common/Proton 8"*/proton \
+        "$HOME/.steam/steam/steamapps/common/Proton 7"*/proton; do
+        if [ -f "$p" ]; then
+            echo "$p"
+            return
+        fi
+    done
+    echo ""
+}
+
 clear
 echo -e "${CYAN}"
 cat << 'BANNER'
- ╔═══════════════════════════════════════════════════════════════╗
- ║                                                               ║
- ║     🐧🐧🐧  PENGUINS!  🐧🐧🐧                                 ║
- ║                                                               ║
- ║     Wild Tangent Classic (2006)                               ║
- ║     Steam Deck One-Click Installer                            ║
- ║                                                               ║
- ╚═══════════════════════════════════════════════════════════════╝
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║     🐧🐧🐧  PENGUINS!  🐧🐧🐧                                 ║
+║                                                               ║
+║     Wild Tangent Classic (2006)                               ║
+║     Steam Deck Installer - Game Mode Ready!                   ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
 BANNER
 echo -e "${NC}"
 
 # ============================================
 # STEP 1: Check requirements
 # ============================================
-echo -e "${BLUE}[1/6] Checking requirements...${NC}"
+echo -e "${BLUE}[1/8] Checking requirements...${NC}"
 
 for cmd in unzip curl python3; do
     if command -v $cmd &> /dev/null; then
@@ -55,30 +76,29 @@ for cmd in unzip curl python3; do
     fi
 done
 
-# Check Wine/Proton
-if command -v wine &> /dev/null; then
-    echo -e "${GREEN}  ✓ Wine${NC}"
-elif [ -d "$HOME/.steam/steam/steamapps/common/Proton - Experimental" ]; then
-    echo -e "${GREEN}  ✓ Proton Experimental${NC}"
-else
-    echo -e "${YELLOW}  ⚠ Install 'Proton Experimental' from Steam first${NC}"
-    echo -e "${YELLOW}    Steam → Library → Search 'Proton' → Install${NC}"
+PROTON=$(find_proton)
+if [ -z "$PROTON" ]; then
+    echo -e "${RED}  ✗ No Proton found. Install Proton from Steam first.${NC}"
     exit 1
 fi
+PROTON_DIR=$(dirname "$PROTON")
+PROTON_NAME=$(basename "$PROTON_DIR")
+echo -e "${GREEN}  ✓ Found: $PROTON_NAME${NC}"
 
 # ============================================
 # STEP 2: Create directories
 # ============================================
-echo -e "${BLUE}[2/6] Creating directories...${NC}"
+echo -e "${BLUE}[2/8] Creating directories...${NC}"
+rm -rf "$INSTALL_DIR" 2>/dev/null
 mkdir -p "$INSTALL_DIR"
-mkdir -p "$WINE_PREFIX"
+mkdir -p "$INSTALL_DIR/prefix"
 mkdir -p "$TEMP_DIR"
 echo -e "${GREEN}  ✓ $INSTALL_DIR${NC}"
 
 # ============================================
 # STEP 3: Download game
 # ============================================
-echo -e "${BLUE}[3/6] Downloading from Archive.org...${NC}"
+echo -e "${BLUE}[3/8] Downloading Penguins! from Archive.org...${NC}"
 if [ -f "$TEMP_DIR/Penguins.zip" ]; then
     echo -e "${YELLOW}  Using cached download...${NC}"
 else
@@ -89,85 +109,159 @@ echo -e "${GREEN}  ✓ Downloaded $(du -h "$TEMP_DIR/Penguins.zip" | cut -f1)${N
 # ============================================
 # STEP 4: Extract game
 # ============================================
-echo -e "${BLUE}[4/6] Extracting game files...${NC}"
-rm -rf "$TEMP_DIR/extracted"
+echo -e "${BLUE}[4/8] Extracting game files...${NC}"
+rm -rf "$TEMP_DIR/extracted" 2>/dev/null
 unzip -q -o "$TEMP_DIR/Penguins.zip" -d "$TEMP_DIR/extracted"
 
-# Find game folder
+# Find and copy game files
 GAME_FOLDER=$(find "$TEMP_DIR/extracted" -type d -iname "Penguins*" 2>/dev/null | head -1)
 [ -z "$GAME_FOLDER" ] && GAME_FOLDER="$TEMP_DIR/extracted"
 
 cp -r "$GAME_FOLDER"/* "$INSTALL_DIR/" 2>/dev/null || cp -r "$TEMP_DIR/extracted"/* "$INSTALL_DIR/"
+echo -e "${GREEN}  ✓ Extracted game files${NC}"
 
-GAME_EXE=$(find "$INSTALL_DIR" -iname "penguins.exe" 2>/dev/null | head -1)
-[ -z "$GAME_EXE" ] && GAME_EXE=$(find "$INSTALL_DIR" -iname "*.exe" ! -iname "unins*" 2>/dev/null | head -1)
+# ============================================
+# STEP 5: Create Proton prefix
+# ============================================
+echo -e "${BLUE}[5/8] Creating Proton prefix...${NC}"
+export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.steam/steam"
+export STEAM_COMPAT_DATA_PATH="$INSTALL_DIR/prefix"
 
-if [ -z "$GAME_EXE" ]; then
-    echo -e "${RED}  ✗ Could not find game executable${NC}"
+# Initialize prefix
+"$PROTON" run cmd /c "echo Prefix created" > /dev/null 2>&1
+echo -e "${GREEN}  ✓ Prefix initialized${NC}"
+
+# ============================================
+# STEP 6: Install VC++ 2005 Runtime
+# ============================================
+echo -e "${BLUE}[6/8] Installing Visual C++ 2005 Runtime...${NC}"
+echo -e "${YELLOW}  (This fixes the runtime error)${NC}"
+
+if [ ! -f "$TEMP_DIR/vcredist2005_x86.exe" ]; then
+    curl -L -o "$TEMP_DIR/vcredist2005_x86.exe" "$VCRUN_URL" 2>/dev/null
+fi
+
+# Run installer silently
+DISPLAY=:0 "$PROTON" run "$TEMP_DIR/vcredist2005_x86.exe" /q > /dev/null 2>&1 &
+VCPID=$!
+
+# Wait for install (max 60 seconds)
+for i in {1..12}; do
+    sleep 5
+    if ! kill -0 $VCPID 2>/dev/null; then
+        break
+    fi
+    echo -e "${YELLOW}  Installing... ($((i*5))s)${NC}"
+done
+kill $VCPID 2>/dev/null || true
+
+# Verify
+if ls "$INSTALL_DIR/prefix/pfx/drive_c/windows/system32/msvcm80.dll" > /dev/null 2>&1; then
+    echo -e "${GREEN}  ✓ VC++ 2005 installed${NC}"
+else
+    echo -e "${YELLOW}  ⚠ VC++ may not have installed fully - game might still work${NC}"
+fi
+
+# ============================================
+# STEP 7: Setup game in prefix
+# ============================================
+echo -e "${BLUE}[7/8] Configuring game...${NC}"
+
+# Create Windows game directory
+WIN_GAME_DIR="$INSTALL_DIR/prefix/pfx/drive_c/Program Files (x86)/WildGames/Penguins!"
+mkdir -p "$WIN_GAME_DIR"
+
+# Copy game files
+cp "$INSTALL_DIR"/*.exe "$WIN_GAME_DIR/" 2>/dev/null
+cp "$INSTALL_DIR"/*.dll "$WIN_GAME_DIR/" 2>/dev/null
+cp "$INSTALL_DIR"/*.ico "$WIN_GAME_DIR/" 2>/dev/null
+cp "$INSTALL_DIR"/*.bmp "$WIN_GAME_DIR/" 2>/dev/null
+cp -r "$INSTALL_DIR/Resources" "$WIN_GAME_DIR/" 2>/dev/null
+cp -r "$INSTALL_DIR/help" "$WIN_GAME_DIR/" 2>/dev/null
+cp -r "$INSTALL_DIR/LocalHTML" "$WIN_GAME_DIR/" 2>/dev/null
+cp -r "$INSTALL_DIR/junk" "$WIN_GAME_DIR/" 2>/dev/null
+
+# Create WildTangent registry
+WINE_PATH="$PROTON_DIR/files/bin/wine"
+if [ -f "$WINE_PATH" ]; then
+    REG_FILE="$TEMP_DIR/wildtangent.reg"
+    cat > "$REG_FILE" << 'REGEOF'
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WildTangent]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WildTangent\Branding]
+"DP"="wildgames"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WildTangent\InstalledSKUs\WT011554]
+"ProductDisplayName"="Penguins!"
+"ProductGUID"="f405496e-4cd5-4891-a8bc-3e58bd47b25c"
+"InstallDirectory"="C:\\Program Files (x86)\\WildGames\\Penguins!"
+"ExeName"="penguins.exe"
+"RuntimeExeName"="penguins.exe"
+"HideBuyButton"="1"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\WildTangent\InstalledSKUs\WT011554]
+"ProductDisplayName"="Penguins!"
+"ProductGUID"="f405496e-4cd5-4891-a8bc-3e58bd47b25c"
+"InstallDirectory"="C:\\Program Files (x86)\\WildGames\\Penguins!"
+"ExeName"="penguins.exe"
+"RuntimeExeName"="penguins.exe"
+"HideBuyButton"="1"
+REGEOF
+
+    WINEPREFIX="$INSTALL_DIR/prefix/pfx" "$WINE_PATH" regedit "$REG_FILE" > /dev/null 2>&1
+    echo -e "${GREEN}  ✓ Registry configured${NC}"
+fi
+
+# Set resolution for Steam Deck (800p)
+mkdir -p "$INSTALL_DIR/prefix/pfx/drive_c/ProgramData/WildTangent/Penguins"
+cat > "$INSTALL_DIR/prefix/pfx/drive_c/ProgramData/WildTangent/Penguins/Persistent" << EOF
+SCREENWIDTH=1280
+SCREENHEIGHT=800
+FULLSCREEN=1
+EOF
+echo -e "${GREEN}  ✓ Resolution set to 1280x800${NC}"
+
+# ============================================
+# STEP 8: Create launcher and add to Steam
+# ============================================
+echo -e "${BLUE}[8/8] Creating launcher and adding to Steam...${NC}"
+
+# Create launch script
+cat > "$INSTALL_DIR/Penguins.sh" << LAUNCHER
+#!/bin/bash
+# Penguins! Launcher for Steam Deck Game Mode
+
+cd "\$(dirname "\$0")"
+
+export STEAM_COMPAT_CLIENT_INSTALL_PATH="\$HOME/.steam/steam"
+export STEAM_COMPAT_DATA_PATH="\$PWD/prefix"
+export PROTON_USE_WINED3D=1
+
+# Find Proton
+PROTON="\$HOME/.steam/steam/compatibilitytools.d/GE-Proton"*/proton
+[ ! -f "\$PROTON" ] && PROTON="\$HOME/.steam/steam/steamapps/common/Proton - Experimental/proton"
+[ ! -f "\$PROTON" ] && PROTON=\$(find "\$HOME/.steam/steam/steamapps/common" -name "proton" -path "*Proton*" 2>/dev/null | head -1)
+
+if [ ! -f "\$PROTON" ]; then
+    zenity --error --text="Proton not found!" 2>/dev/null
     exit 1
 fi
-echo -e "${GREEN}  ✓ Found $(basename "$GAME_EXE")${NC}"
 
-# ============================================
-# STEP 5: Create launcher
-# ============================================
-echo -e "${BLUE}[5/6] Creating launcher...${NC}"
-
-cat > "$INSTALL_DIR/Penguins.sh" << 'LAUNCHER'
-#!/bin/bash
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
-
-export WINEPREFIX="$SCRIPT_DIR/prefix"
-export WINEDLLOVERRIDES="mscoree,mshtml="
-export WINEARCH=win32
-
-GAME_EXE=$(find "$SCRIPT_DIR" -maxdepth 3 -iname "penguins.exe" 2>/dev/null | head -1)
-[ -z "$GAME_EXE" ] && GAME_EXE=$(find "$SCRIPT_DIR" -maxdepth 3 -iname "*.exe" ! -iname "unins*" 2>/dev/null | head -1)
-
-[ -z "$GAME_EXE" ] && { zenity --error --text="Could not find game!" 2>/dev/null; exit 1; }
-
-cd "$(dirname "$GAME_EXE")"
-
-# Try Wine first
-if command -v wine &> /dev/null; then
-    exec wine "$GAME_EXE" "$@"
-fi
-
-# Fall back to Proton
-PROTON="$HOME/.steam/steam/steamapps/common/Proton - Experimental/proton"
-[ ! -f "$PROTON" ] && PROTON=$(find "$HOME/.steam/steam/steamapps/common" -name "proton" -path "*Proton*" 2>/dev/null | head -1)
-
-if [ -f "$PROTON" ]; then
-    export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.steam/steam"
-    export STEAM_COMPAT_DATA_PATH="$WINEPREFIX"
-    mkdir -p "$WINEPREFIX"
-    exec "$PROTON" run "$GAME_EXE" "$@"
-fi
-
-zenity --error --text="No Wine/Proton found!" 2>/dev/null
-exit 1
+exec "\$PROTON" run "C:\\\\Program Files (x86)\\\\WildGames\\\\Penguins!\\\\penguins.exe" "\$@"
 LAUNCHER
 
 chmod +x "$INSTALL_DIR/Penguins.sh"
-echo -e "${GREEN}  ✓ Created Penguins.sh${NC}"
+echo -e "${GREEN}  ✓ Launcher created${NC}"
 
-# ============================================
-# STEP 6: Add to Steam automatically
-# ============================================
-echo -e "${BLUE}[6/6] Adding to Steam library...${NC}"
-
-# Find Steam user ID
+# Add to Steam
 STEAM_USERDATA="$HOME/.steam/steam/userdata"
 STEAM_USER_ID=$(ls "$STEAM_USERDATA" 2>/dev/null | grep -E '^[0-9]+$' | head -1)
 
-if [ -z "$STEAM_USER_ID" ]; then
-    echo -e "${YELLOW}  ⚠ Could not find Steam user ID${NC}"
-    echo -e "${YELLOW}    Add manually: Steam → Games → Add Non-Steam Game${NC}"
-else
+if [ -n "$STEAM_USER_ID" ]; then
     SHORTCUTS_FILE="$STEAM_USERDATA/$STEAM_USER_ID/config/shortcuts.vdf"
 
-    # Python script to add shortcut
     python3 << PYTHON_SCRIPT
 import os
 import struct
@@ -176,9 +270,8 @@ shortcuts_file = "$SHORTCUTS_FILE"
 game_name = "Penguins!"
 exe_path = "$INSTALL_DIR/Penguins.sh"
 start_dir = "$INSTALL_DIR"
-icon_path = ""
+launch_opts = "PROTON_USE_WINED3D=1 %command%"
 
-# VDF binary format helper functions
 def read_vdf(filepath):
     if not os.path.exists(filepath):
         return {}
@@ -191,13 +284,10 @@ def parse_vdf(data):
     pos = 0
     if len(data) < 1:
         return shortcuts
-    # Skip header
     if data[pos:pos+1] == b'\x00':
         pos += 1
-        # Read "shortcuts"
         end = data.find(b'\x00', pos)
         pos = end + 1
-
     while pos < len(data) - 1:
         if data[pos:pos+1] == b'\x08':
             break
@@ -205,13 +295,11 @@ def parse_vdf(data):
             pos += 1
             continue
         pos += 1
-        # Read index
         end = data.find(b'\x00', pos)
         if end == -1:
             break
         idx = data[pos:end].decode('utf-8', errors='ignore')
         pos = end + 1
-
         entry = {}
         while pos < len(data):
             type_byte = data[pos:pos+1]
@@ -219,13 +307,11 @@ def parse_vdf(data):
                 pos += 1
                 break
             pos += 1
-
             end = data.find(b'\x00', pos)
             if end == -1:
                 break
             key = data[pos:end].decode('utf-8', errors='ignore')
             pos = end + 1
-
             if type_byte == b'\x01':
                 end = data.find(b'\x00', pos)
                 entry[key] = data[pos:end].decode('utf-8', errors='ignore')
@@ -235,10 +321,8 @@ def parse_vdf(data):
                 pos += 4
             else:
                 break
-
         if idx.isdigit():
             shortcuts[int(idx)] = entry
-
     return shortcuts
 
 def write_vdf(filepath, shortcuts):
@@ -259,16 +343,14 @@ def generate_appid(exe, name):
     key = exe + name
     return (int(hashlib.md5(key.encode()).hexdigest()[:8], 16) & 0x7FFFFFFF) | 0x80000000
 
-# Load existing shortcuts
 shortcuts = read_vdf(shortcuts_file)
 
 # Check if already exists
 for idx, entry in shortcuts.items():
     if entry.get('AppName') == game_name or entry.get('appname') == game_name:
-        print("  Already in Steam library!")
+        print("Already in Steam!")
         exit(0)
 
-# Add new shortcut
 new_idx = max(shortcuts.keys(), default=-1) + 1
 appid = generate_appid(exe_path, game_name)
 
@@ -277,9 +359,9 @@ shortcuts[new_idx] = {
     'AppName': game_name,
     'Exe': f'"{exe_path}"',
     'StartDir': f'"{start_dir}"',
-    'icon': icon_path,
+    'icon': '',
     'ShortcutPath': '',
-    'LaunchOptions': '',
+    'LaunchOptions': launch_opts,
     'IsHidden': 0,
     'AllowDesktopConfig': 1,
     'AllowOverlay': 1,
@@ -292,27 +374,22 @@ shortcuts[new_idx] = {
     'tags': {}
 }
 
-# Backup existing
 if os.path.exists(shortcuts_file):
     import shutil
     shutil.copy(shortcuts_file, shortcuts_file + '.bak')
 
-# Write new shortcuts
 os.makedirs(os.path.dirname(shortcuts_file), exist_ok=True)
 write_vdf(shortcuts_file, shortcuts)
-print("  Added to Steam!")
+print("Added to Steam!")
 PYTHON_SCRIPT
 
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}  ✓ Added to Steam library${NC}"
-        echo -e "${YELLOW}  ⚠ Restart Steam to see it in Game Mode${NC}"
-    else
-        echo -e "${YELLOW}  ⚠ Could not auto-add. Add manually via Steam.${NC}"
-    fi
+    echo -e "${GREEN}  ✓ Added to Steam library${NC}"
+else
+    echo -e "${YELLOW}  ⚠ Could not find Steam user - add manually${NC}"
 fi
 
 # Cleanup
-rm -rf "$TEMP_DIR/extracted"
+rm -rf "$TEMP_DIR/extracted" 2>/dev/null
 
 # ============================================
 # Done!
@@ -324,33 +401,27 @@ echo -e "${GREEN}╚════════════════════
 echo ""
 echo -e "${CYAN}Game Location:${NC} $INSTALL_DIR"
 echo ""
-echo -e "${YELLOW}▶ PLAY IN GAME MODE:${NC}"
-echo "  1. Restart Steam (quit and reopen)"
-echo "  2. Look for 'Penguins!' in your library"
-echo "  3. Use touch screen to drag gadgets!"
+echo -e "${YELLOW}▶ TO PLAY:${NC}"
+echo "  1. Switch to Game Mode (or restart Steam in Desktop Mode)"
+echo "  2. Find 'Penguins!' in your Steam library"
+echo "  3. Play! Use touch screen to drag gadgets"
 echo ""
-echo -e "${YELLOW}▶ CONTROLS:${NC}"
-echo "  Touch Screen  → Tap and drag gadgets (best way!)"
+echo -e "${YELLOW}▶ CONTROLS (Game Mode):${NC}"
+echo "  Touch Screen  → Tap and drag (best!)"
 echo "  Right Pad     → Mouse cursor"
-echo "  R2 Trigger    → Left click (drag)"
-echo "  L2 Trigger    → Right click (rotate bridges)"
-echo "  Y Button      → Fullscreen"
-echo "  Start         → Pause"
+echo "  R2 Trigger    → Left click"
+echo "  L2 Trigger    → Right click (rotate)"
 echo ""
-
-# Try to show notification on desktop
-if command -v notify-send &> /dev/null; then
-    notify-send -i applications-games "Penguins! Installed" "Restart Steam to play in Game Mode!" 2>/dev/null || true
-fi
+echo -e "${CYAN}Note: Game works in Game Mode. Desktop Mode may have display issues.${NC}"
+echo ""
 
 # Prompt to restart Steam
-echo -e "${CYAN}Would you like to restart Steam now? (y/n)${NC}"
-read -t 30 -n 1 -r REPLY || REPLY="n"
+read -t 30 -p "Restart Steam now to see the game? (y/n) " -n 1 -r REPLY || REPLY="n"
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Restarting Steam..."
     pkill -x steam 2>/dev/null || true
     sleep 2
     nohup steam &>/dev/null &
-    echo -e "${GREEN}Steam is restarting. Look for Penguins! in your library!${NC}"
+    echo -e "${GREEN}Steam restarting. Switch to Game Mode to play!${NC}"
 fi
