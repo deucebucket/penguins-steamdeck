@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Install Penguins!
+Comment=One-click installer for Penguins! (Wild Tangent) on Steam Deck
+Exec=bash -c 'curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/install.sh | bash; read -p "Press Enter to close..."'
+Icon=application-x-executable
+Terminal=true
+Type=Application
+Categories=Game;Utility;

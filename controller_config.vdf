@@ -1,0 +1,129 @@
+"controller_mappings"
+{
+	"version"		"3"
+	"title"		"Penguins! - Steam Deck"
+	"description"		"Optimized layout for Penguins! puzzle game. Trackpad as mouse, triggers for click, touch works too!"
+	"creator"		"deucebucket"
+	"progenitor"		""
+	"url"		""
+	"export_type"		"personal"
+	"controller_type"		"controller_neptune"
+	"controller_caps"		"23117823"
+	"major_revision"		"0"
+	"minor_revision"		"0"
+	"Timestamp"		"0"
+	"actions"
+	{
+		"Default"
+		{
+			"title"		"Default"
+			"StickPadGyro"
+			{
+				"Right Trackpad"
+				{
+					"mode"		"mouse"
+					"sensitivity"		"100"
+				}
+				"Left Trackpad"
+				{
+					"mode"		"mouse"
+					"sensitivity"		"50"
+				}
+			}
+			"Triggers"
+			{
+				"Right Trigger"
+				{
+					"output_trigger"		"1"
+					"output_trigger_button"		"mouse_left"
+				}
+				"Left Trigger"
+				{
+					"output_trigger"		"1"
+					"output_trigger_button"		"mouse_right"
+				}
+			}
+			"Buttons"
+			{
+				"Y"
+				{
+					"activators"
+					{
+						"Full_Press"
+						{
+							"bindings"
+							{
+								"binding"		"key_press F"
+							}
+						}
+					}
+				}
+				"X"
+				{
+					"activators"
+					{
+						"Full_Press"
+						{
+							"bindings"
+							{
+								"binding"		"key_press R"
+							}
+						}
+					}
+				}
+				"B"
+				{
+					"activators"
+					{
+						"Full_Press"
+						{
+							"bindings"
+							{
+								"binding"		"key_press H"
+							}
+						}
+					}
+				}
+				"A"
+				{
+					"activators"
+					{
+						"Full_Press"
+						{
+							"bindings"
+							{
+								"binding"		"mouse_button LEFT"
+							}
+						}
+					}
+				}
+				"Start"
+				{
+					"activators"
+					{
+						"Full_Press"
+						{
+							"bindings"
+							{
+								"binding"		"key_press P"
+							}
+						}
+					}
+				}
+				"Select"
+				{
+					"activators"
+					{
+						"Full_Press"
+						{
+							"bindings"
+							{
+								"binding"		"key_press ESCAPE"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
