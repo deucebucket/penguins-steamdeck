@@ -1,103 +1,135 @@
-# Penguins! for Steam Deck
+# Penguins! (2006 WildTangent) - Steam Deck Linux Port
 
-One-click installer for **Penguins!** (Wild Tangent, 2006) on Steam Deck.
+## 🚧 WORK IN PROGRESS - NOT READY FOR GENERAL USE 🚧
 
-Works in **Game Mode** with controller, trackpad, and touch screen!
+This is an experimental port of the 2006 WildTangent game "Penguins!" to Linux/Steam Deck. **This is NOT a one-click installer yet!**
 
-## Quick Install
+### Current Status: ALPHA
 
-Open a terminal (Konsole) in Desktop Mode and run:
+The game launches and gameplay works, but there are significant issues that need fixing before this is ready for general use.
 
-```bash
-curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/install.sh | bash
+---
+
+## 🏆 Possibly the First Working Linux Port
+
+No documented successful runs found on WineHQ AppDB, ProtonDB, or Linux forums. We may be the first to get this game partially working on Linux!
+
+---
+
+## 📸 Screenshots (Proof of Progress)
+
+24 screenshots in `/screenshots/` documenting:
+- Loading screen working
+- Main menu accessible
+- Options menu (game supports 1280x720 natively!)
+- Level selection
+- **8+ minutes of stable gameplay**
+
+---
+
+## ✅ What Works
+
+- ✅ Game launches (DRM bypassed)
+- ✅ Main menu loads
+- ✅ Profile system
+- ✅ Options menu
+- ✅ Level selection
+- ✅ In-game gameplay (penguins move, timer works)
+- ✅ Sound/Music
+- ✅ 8+ minutes stable gameplay tested
+
+---
+
+## ❌ What DOESN'T Work Yet
+
+| Issue | Severity | Description |
+|-------|----------|-------------|
+| **Mouse offset** | 🔴 HIGH | In 720p mode, clicks don't align with where you click. Game area offset from mouse coordinates. |
+| **Level completion crash** | 🔴 HIGH | Clicking "Next" after completing a level may crash the game. Needs investigation. |
+| **Username input** | 🟡 MEDIUM | Cannot type username when creating profile. Steam keyboard doesn't work. Need config file workaround. |
+| **Touch screen** | 🟡 MEDIUM | Touch coordinates offset, similar to mouse issue. |
+| **Virtual desktop required** | 🟡 MEDIUM | Game runs in Wine virtual desktop window, not fullscreen. |
+
+---
+
+## 🔧 Current Technical Setup
+
+### Requirements
+- Proton 5.0
+- d3d8to9 wrapper
+- Wine virtual desktop mode
+- Manual binary patches
+
+### Binary Patches Required
+
+The game executable must be patched to bypass WildTangent DRM:
+
+```
+Offset    Original           Patched              Purpose
+0xec185   74 15 (je)         eb 15 (jmp)          Skip registry error
+0xec408   0f 84 c1 00 00 00  90 90 90 90 90 90    Skip SKU check #1
+0xec46b   7e 46 (jle)        90 90 (nop)          Skip SKU check #2
 ```
 
-Or clone and run:
+### Wine Settings Required
 
 ```bash
-git clone https://github.com/deucebucket/penguins-steamdeck.git
-cd penguins-steamdeck
-./install.sh
+# Virtual desktop (required for D3D to work)
+wine reg add "HKEY_CURRENT_USER\Software\Wine\Explorer\Desktops" /v "Default" /t REG_SZ /d "1280x720" /f
+wine reg add "HKEY_CURRENT_USER\Software\Wine\Explorer" /v "Desktop" /t REG_SZ /d "Default" /f
 ```
 
-## What It Does
+### Launch Command
 
-1. Downloads Penguins! from [Archive.org](https://archive.org/details/penguins2006)
-2. Installs Visual C++ 2005 Runtime (required for WildTangent games)
-3. Sets up WildTangent registry keys
-4. Configures 1280x800 resolution for Steam Deck
-5. Creates a Proton-compatible launcher with display fixes
-6. **Automatically adds to Steam** - no manual setup needed!
-
-## Playing
-
-After installing:
-
-1. **Switch to Game Mode** (or restart Steam in Desktop Mode)
-2. **Find "Penguins!"** in your Steam library
-3. **Play!** Use touch screen for best experience
-
-> **Note:** The game works best in **Game Mode**. Desktop Mode (Wayland) may have display issues with this old DirectX 8 game.
-
-### Recommended Controller Mapping
-
-| Control | Action |
-|---------|--------|
-| Right Trackpad | Mouse cursor |
-| R2 (Right Trigger) | Left click - Drag gadgets |
-| L2 (Left Trigger) | Right click - Rotate bridges |
-| Y | Fullscreen (F) |
-| Start | Pause menu (P) |
-| X | Reset level (R) |
-| B | Help (H) |
-| Touch Screen | Tap and drag - Works great! |
-
-## Game Controls
-
-Penguins! is a puzzle game where you drag gadgets to help penguins escape:
-
-- **Mouse/Touch**: Drag gadgets from the tray to the level
-- **Right-click/L2**: Rotate bridges and some gadgets
-- **F**: Toggle fullscreen
-- **P**: Pause
-- **R**: Reset level
-- **H**: Show hints
-
-## Requirements
-
-- Steam Deck (or Linux with Wine)
-- **Proton Experimental** installed from Steam (if no system Wine)
-
-## Troubleshooting
-
-### "No Wine/Proton found"
-Install Proton Experimental from Steam:
-- Steam → Library → Search "Proton" → Install "Proton Experimental"
-
-### Game doesn't launch
-Try running from terminal to see errors:
 ```bash
-~/Games/Penguins/Penguins.sh
+PROTON_USE_WINED3D=1 \
+WINEDLLOVERRIDES="d3d8=n" \
+STEAM_COMPAT_CLIENT_INSTALL_PATH="/home/deck/.steam/steam" \
+STEAM_COMPAT_DATA_PATH="$PREFIX_PATH" \
+"/path/to/Proton 5.0/proton" run penguins.exe
 ```
 
-### Invisible window / No display in Desktop Mode
-This is a known issue with old DirectX 8 games on Wayland (KDE Plasma).
-**Solution:** Switch to Game Mode - GameScope handles this properly.
+---
 
-### Runtime error
-The installer automatically installs VC++ 2005 Runtime. If you still get errors:
-```bash
-# Reinstall the game
-rm -rf ~/Games/Penguins
-./install.sh
-```
+## 🎯 TODO List
 
-## Credits
+- [ ] **Fix mouse/touch offset** - Critical for playability
+- [ ] **Fix level completion crash** - Investigate "Next" button issue
+- [ ] **Add username config** - Workaround for keyboard input
+- [ ] **Test fullscreen mode** - May fix mouse offset
+- [ ] **Create automated installer** - Currently manual process
+- [ ] **Test more levels** - Only tested first zone
+- [ ] **Package for distribution** - Not ready yet
 
-- **Game**: Penguins! by Mumbo Jumbo / Wild Tangent (2006)
-- **Archive**: [Internet Archive](https://archive.org/details/penguins2006)
-- **Installer**: Made for Steam Deck community
+---
 
-## License
+## 📁 Files in This Repo
 
-This installer script is public domain. The game itself is abandonware preserved by Archive.org.
+- `README.md` - This file
+- `CHANGELOG.md` - Progress history
+- `launch_penguins.sh` - Basic launcher (needs work)
+- `screenshots/` - 24 proof-of-concept screenshots
+
+**NOT included:**
+- Game files (copyrighted)
+- Wine prefix (too large)
+- Patched executable (legal concerns)
+
+---
+
+## 🐧 About the Game
+
+**Penguins!** (2006) by WildTangent - A puzzle game helping penguins escape through 80+ levels.
+
+---
+
+## 🙏 Credits
+
+- Original game: WildTangent (2006)
+- d3d8to9: [crosire](https://github.com/crosire/d3d8to9)
+- Wine/Proton: Valve & Wine Project
+- Port work: Claude Code + Steam Deck user
+
+---
+
+*Status: Alpha | Last updated: January 23, 2026*
