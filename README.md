@@ -16,14 +16,53 @@ No documented successful runs found on WineHQ AppDB, ProtonDB, or Linux forums. 
 
 ---
 
-## 📸 Screenshots (Proof of Progress)
+## 📸 Screenshots
 
-24 screenshots in `/screenshots/` documenting:
-- Loading screen working
-- Main menu accessible
-- Options menu (game supports 1280x720 natively!)
-- Level selection
-- **8+ minutes of stable gameplay**
+### Main Menu
+![Main Menu](screenshots/02_main_menu_loaded.png)
+
+### Profiles Screen
+![Profiles](screenshots/07_absolute_click.png)
+
+### Options Menu (1280x720 Native Support!)
+![Options](screenshots/08_play_precise.png)
+
+### Level Selection
+![Level Select](screenshots/09_back_to_game.png)
+
+### Gameplay (8+ Minutes Stable!)
+![Gameplay](screenshots/11_gameplay_focused.png)
+
+### More Gameplay
+![Gameplay 2](screenshots/14_progress.png)
+
+<details>
+<summary>📁 View all 24 screenshots</summary>
+
+| Screenshot | Description |
+|------------|-------------|
+| [01_main_menu.png](screenshots/01_main_menu.png) | Loading screen |
+| [02_main_menu_loaded.png](screenshots/02_main_menu_loaded.png) | Main menu |
+| [03_after_play_click.png](screenshots/03_after_play_click.png) | After clicking play |
+| [04_play_attempt2.png](screenshots/04_play_attempt2.png) | Play attempt |
+| [05_after_profile_play.png](screenshots/05_after_profile_play.png) | Profile screen |
+| [06_play_click.png](screenshots/06_play_click.png) | Play click |
+| [07_absolute_click.png](screenshots/07_absolute_click.png) | Profiles |
+| [08_play_precise.png](screenshots/08_play_precise.png) | Options menu |
+| [09_back_to_game.png](screenshots/09_back_to_game.png) | Level select |
+| [10_gameplay.png](screenshots/10_gameplay.png) | Gameplay start |
+| [11_gameplay_focused.png](screenshots/11_gameplay_focused.png) | Gameplay |
+| [12_skip_clicked.png](screenshots/12_skip_clicked.png) | Skip button |
+| [13_menu.png](screenshots/13_menu.png) | In-game |
+| [14_progress.png](screenshots/14_progress.png) | Game progress |
+| [15_tool_use.png](screenshots/15_tool_use.png) | Using tools |
+| [16_level_end.png](screenshots/16_level_end.png) | Level end |
+| [17_hint.png](screenshots/17_hint.png) | Hint system |
+| [18_tool_placed.png](screenshots/18_tool_placed.png) | Tool placed |
+| [19_monitor_1-5.png](screenshots/19_monitor_1.png) | Monitoring gameplay |
+| [20_reset.png](screenshots/20_reset.png) | Reset |
+
+</details>
 
 ---
 
@@ -52,17 +91,9 @@ No documented successful runs found on WineHQ AppDB, ProtonDB, or Linux forums. 
 
 ---
 
-## 🔧 Current Technical Setup
+## 🔧 Technical Details
 
-### Requirements
-- Proton 5.0
-- d3d8to9 wrapper
-- Wine virtual desktop mode
-- Manual binary patches
-
-### Binary Patches Required
-
-The game executable must be patched to bypass WildTangent DRM:
+### Binary Patches (DRM Bypass)
 
 ```
 Offset    Original           Patched              Purpose
@@ -71,13 +102,10 @@ Offset    Original           Patched              Purpose
 0xec46b   7e 46 (jle)        90 90 (nop)          Skip SKU check #2
 ```
 
-### Wine Settings Required
-
-```bash
-# Virtual desktop (required for D3D to work)
-wine reg add "HKEY_CURRENT_USER\Software\Wine\Explorer\Desktops" /v "Default" /t REG_SZ /d "1280x720" /f
-wine reg add "HKEY_CURRENT_USER\Software\Wine\Explorer" /v "Desktop" /t REG_SZ /d "Default" /f
-```
+### Requirements
+- Proton 5.0 with `PROTON_USE_WINED3D=1`
+- d3d8to9 wrapper (or native d3d8 override)
+- Wine virtual desktop mode (1280x720)
 
 ### Launch Command
 
@@ -91,44 +119,34 @@ STEAM_COMPAT_DATA_PATH="$PREFIX_PATH" \
 
 ---
 
-## 🎯 TODO List
+## 🎯 TODO
 
-- [ ] **Fix mouse/touch offset** - Critical for playability
-- [ ] **Fix level completion crash** - Investigate "Next" button issue
-- [ ] **Add username config** - Workaround for keyboard input
-- [ ] **Test fullscreen mode** - May fix mouse offset
-- [ ] **Create automated installer** - Currently manual process
-- [ ] **Test more levels** - Only tested first zone
-- [ ] **Package for distribution** - Not ready yet
-
----
-
-## 📁 Files in This Repo
-
-- `README.md` - This file
-- `CHANGELOG.md` - Progress history
-- `launch_penguins.sh` - Basic launcher (needs work)
-- `screenshots/` - 24 proof-of-concept screenshots
-
-**NOT included:**
-- Game files (copyrighted)
-- Wine prefix (too large)
-- Patched executable (legal concerns)
+- [ ] Fix mouse/touch offset - Critical for playability
+- [ ] Fix level completion crash
+- [ ] Add username config workaround
+- [ ] Test fullscreen mode
+- [ ] Create one-click installer
+- [ ] Test in Game Mode
 
 ---
 
-## 🐧 About the Game
+## 📁 Repo Contents
 
-**Penguins!** (2006) by WildTangent - A puzzle game helping penguins escape through 80+ levels.
+- `penguins.exe` - Patched game executable
+- `Penguins.sh` - Launcher script
+- `Resources/` - Game assets
+- `screenshots/` - 24 proof screenshots
+- `WildTangent.reg` - Registry entries
+- `CHANGELOG.md` - Version history
 
 ---
 
 ## 🙏 Credits
 
-- Original game: WildTangent (2006)
+- Original game: WildTangent / Mumbo Jumbo (2006)
 - d3d8to9: [crosire](https://github.com/crosire/d3d8to9)
 - Wine/Proton: Valve & Wine Project
-- Port work: Claude Code + Steam Deck user
+- Port: Claude Code + Steam Deck user
 
 ---
 
