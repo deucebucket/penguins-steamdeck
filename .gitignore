@@ -1,0 +1,15 @@
+# Wine prefix (user-specific, too large)
+prefix/
+
+# Junk/temp
+junk/
+*.log
+*.bak
+
+# Test executables (keep only the working one)
+penguins_*.exe
+penguins.exeorig
+
+# System files
+.DS_Store
+Thumbs.db
