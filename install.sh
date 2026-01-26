@@ -37,14 +37,19 @@ LINUX_GAME_PATH="$PREFIX_DIR/pfx/drive_c/Program Files (x86)/WildGames/Penguins!
 clear
 echo -e "${CYAN}"
 cat << 'BANNER'
-╔═══════════════════════════════════════════════════════════════╗
-║                                                               ║
-║     🐧🐧🐧  PENGUINS!  🐧🐧🐧                                 ║
-║                                                               ║
-║     WildTangent Classic (2006)                                ║
-║     Steam Deck One-Click Installer v2.0                       ║
-║                                                               ║
-╚═══════════════════════════════════════════════════════════════╝
+    _______________________________________________________________
+   |                                                               |
+   |        (o>    ____  _____ _   _  ____ _   _ ___ _   _ ____    |
+   |        //\   |  _ \| ____| \ | |/ ___| | | |_ _| \ | / ___|   |
+   |       V_/_   | |_) |  _| |  \| | |  _| | | || ||  \| \___ \   |
+   |        ||    |  __/| |___| |\  | |_| | |_| || || |\  |___) |  |
+   |       ^^^^   |_|   |_____|_| \_|\____|\___/|___|_| \_|____/   |
+   |                                                               |
+   |     (o>  (o>      WildTangent Classic (2006)          <o)     |
+   |     //\  //\      Steam Deck Installer v2.2           /\\     |
+   |    V_/_ V_/_                                         _\_V     |
+   |_______________________________________________________________|
+
 BANNER
 echo -e "${NC}"
 
@@ -93,17 +98,29 @@ echo -e "${GREEN}  ✓ Found: $PROTON_NAME${NC}"
 echo -e "${BLUE}[2/7] Setting up Wine prefix...${NC}"
 
 mkdir -p "$PREFIX_DIR"
-mkdir -p "$LINUX_GAME_PATH"
 mkdir -p "$INSTALL_DIR/logs"
 
-# Initialize prefix if needed
-if [ ! -f "$PREFIX_DIR/pfx/system.reg" ]; then
+# Check if we have a pre-configured prefix to use
+if [ -d "$SCRIPT_DIR/prefix_template/pfx" ]; then
+    # Use pre-configured prefix template (includes all registry entries)
+    echo -e "${CYAN}  Using pre-configured prefix template...${NC}"
+    cp -r "$SCRIPT_DIR/prefix_template"/* "$PREFIX_DIR/" 2>/dev/null || true
+elif [ ! -f "$PREFIX_DIR/pfx/system.reg" ]; then
+    # Initialize fresh prefix
     export WINEPREFIX="$PREFIX_DIR/pfx"
     export STEAM_COMPAT_CLIENT_INSTALL_PATH="$STEAM_DIR"
     export STEAM_COMPAT_DATA_PATH="$PREFIX_DIR"
+
+    echo -e "${CYAN}  Initializing Wine prefix (this may take a moment)...${NC}"
     "$PROTON" run wineboot --init 2>/dev/null || true
+    sleep 3
+
+    # Run a dummy command to fully initialize directx/video codecs
+    "$PROTON" run cmd /c "echo initialized" 2>/dev/null || true
     sleep 2
 fi
+
+mkdir -p "$LINUX_GAME_PATH"
 echo -e "${GREEN}  ✓ Wine prefix ready${NC}"
 
 # ============================================
@@ -112,15 +129,16 @@ echo -e "${GREEN}  ✓ Wine prefix ready${NC}"
 echo -e "${BLUE}[3/7] Installing game files...${NC}"
 
 # Copy all game files to Wine C: drive
+# Copy all game files comprehensively
 cp -f "$SCRIPT_DIR/penguins.exe" "$LINUX_GAME_PATH/" 2>/dev/null || true
-cp -f "$SCRIPT_DIR/d3d8.dll" "$LINUX_GAME_PATH/" 2>/dev/null || true
-cp -f "$SCRIPT_DIR/fmod.dll" "$LINUX_GAME_PATH/" 2>/dev/null || true
-cp -f "$SCRIPT_DIR/SKUInfo.ini" "$LINUX_GAME_PATH/" 2>/dev/null || true
 cp -rf "$SCRIPT_DIR/Resources" "$LINUX_GAME_PATH/" 2>/dev/null || true
 cp -rf "$SCRIPT_DIR/junk" "$LINUX_GAME_PATH/" 2>/dev/null || true
+cp -rf "$SCRIPT_DIR/help" "$LINUX_GAME_PATH/" 2>/dev/null || true
+cp -rf "$SCRIPT_DIR/LocalHTML" "$LINUX_GAME_PATH/" 2>/dev/null || true
+cp -rf "$SCRIPT_DIR/local_assets" "$LINUX_GAME_PATH/" 2>/dev/null || true
 
-# Copy any other necessary files
-for f in "$SCRIPT_DIR"/*.dll "$SCRIPT_DIR"/*.ini "$SCRIPT_DIR"/*.dat; do
+# Copy all DLLs, HTML, INI, and other support files
+for f in "$SCRIPT_DIR"/*.dll "$SCRIPT_DIR"/*.ini "$SCRIPT_DIR"/*.dat "$SCRIPT_DIR"/*.html "$SCRIPT_DIR"/*.txt; do
     [ -f "$f" ] && cp -f "$f" "$LINUX_GAME_PATH/" 2>/dev/null || true
 done
 
@@ -158,7 +176,7 @@ echo -e "${BLUE}[5/7] Configuring Wine...${NC}"
 export WINEPREFIX="$PREFIX_DIR/pfx"
 
 # Virtual desktop (required for D3D8)
-"$WINE_BIN" reg add "HKEY_CURRENT_USER\\Software\\Wine\\Explorer\\Desktops" /v "Default" /t REG_SZ /d "1280x720" /f 2>/dev/null || true
+"$WINE_BIN" reg add "HKEY_CURRENT_USER\\Software\\Wine\\Explorer\\Desktops" /v "Default" /t REG_SZ /d "800x600" /f 2>/dev/null || true
 "$WINE_BIN" reg add "HKEY_CURRENT_USER\\Software\\Wine\\Explorer" /v "Desktop" /t REG_SZ /d "Default" /f 2>/dev/null || true
 
 # DLL override for d3d8to9
@@ -242,15 +260,75 @@ if [ -n "$STEAM_USER_ID" ]; then
     GRID_DIR="$STEAM_USERDATA/$STEAM_USER_ID/config/grid"
     mkdir -p "$GRID_DIR"
 
-    # Generate app ID for artwork
-    APPID=$(echo -n "\"$INSTALL_DIR/Penguins.sh\"Penguins!" | md5sum | head -c 8)
-    APPID=$((0x$APPID & 0x7FFFFFFF | 0x80000000))
+    # Generate app ID (matches shortcut generation below)
+    APPID=$(python3 -c "
+import hashlib
+exe_path = '\"$INSTALL_DIR/Penguins.sh\"'
+game_name = 'Penguins!'
+appid = int(hashlib.md5((exe_path + game_name).encode()).hexdigest()[:8], 16)
+appid = (appid & 0x7FFFFFFF) | 0x80000000
+print(appid)
+")
 
-    # Copy artwork (use screenshot as grid image)
-    if [ -f "$INSTALL_DIR/screenshots/02_main_menu_loaded.png" ]; then
-        cp "$INSTALL_DIR/screenshots/02_main_menu_loaded.png" "$GRID_DIR/${APPID}.png" 2>/dev/null || true
-        cp "$INSTALL_DIR/screenshots/02_main_menu_loaded.png" "$GRID_DIR/${APPID}p.png" 2>/dev/null || true
-    fi
+    # Install Pillow if needed (for artwork generation)
+    python3 -c "from PIL import Image" 2>/dev/null || pip3 install --user --break-system-packages Pillow -q 2>/dev/null
+
+    # Generate Steam artwork dynamically (works for any install path)
+    python3 << ARTWORK_SCRIPT
+import os
+import shutil
+
+grid_dir = "$GRID_DIR"
+game_dir = "$INSTALL_DIR"
+app_id = "$APPID"
+
+title_path = f"{game_dir}/junk/local_assets/img/title.jpg"
+logo_path = f"{game_dir}/help/logo.jpg"
+
+try:
+    from PIL import Image
+
+    if os.path.exists(title_path):
+        title = Image.open(title_path)
+        logo = Image.open(logo_path) if os.path.exists(logo_path) else None
+
+        # Grid/Cover (600x900 vertical)
+        grid = Image.new('RGB', (600, 900), (30, 60, 90))
+        scale = 600 / title.width
+        title_scaled = title.resize((600, int(title.height * scale)), Image.LANCZOS)
+        grid.paste(title_scaled, (0, 50))
+        grid.save(f"{grid_dir}/{app_id}.png", "PNG")
+        grid.save(f"{grid_dir}/{app_id}p.png", "PNG")
+
+        # Hero banner (1920x620)
+        hero = Image.new('RGB', (1920, 620), (20, 40, 60))
+        scale = min(496 / title.height, 960 / title.width)
+        title_hero = title.resize((int(title.width * scale), int(title.height * scale)), Image.LANCZOS)
+        hero.paste(title_hero, ((1920 - title_hero.width) // 2, (620 - title_hero.height) // 2))
+        hero.save(f"{grid_dir}/{app_id}_hero.png", "PNG")
+
+        # Logo (transparent)
+        if logo:
+            logo_rgba = logo.convert('RGBA')
+            data = list(logo_rgba.getdata())
+            new_data = [(0,0,0,0) if (r<30 and g<30 and b<30) else (r,g,b,a) for r,g,b,a in data]
+            logo_rgba.putdata(new_data)
+            logo_rgba.save(f"{grid_dir}/{app_id}_logo.png", "PNG")
+
+        print("Artwork generated with PIL")
+    else:
+        print("No source artwork found")
+
+except ImportError:
+    # Fallback: just copy title.jpg as grid image
+    if os.path.exists(title_path):
+        shutil.copy(title_path, f"{grid_dir}/{app_id}.jpg")
+        shutil.copy(title_path, f"{grid_dir}/{app_id}p.jpg")
+        print("Artwork copied (PIL not available)")
+    else:
+        print("No artwork (PIL not available)")
+ARTWORK_SCRIPT
+    echo -e "${CYAN}  Artwork installed${NC}"
 
     # Add to shortcuts.vdf using Python
     python3 << PYTHON_ADD
@@ -330,7 +408,7 @@ for e in shortcuts.values():
         print("Already in Steam")
         exit(0)
 
-# Generate appid
+# Generate appid (md5 hash method for consistency)
 appid = int(hashlib.md5((exe_path + game_name).encode()).hexdigest()[:8], 16)
 appid = (appid & 0x7FFFFFFF) | 0x80000000
 
@@ -340,7 +418,7 @@ shortcuts[new_idx] = {
     'AppName': game_name,
     'Exe': exe_path,
     'StartDir': start_dir,
-    'icon': '',
+    'icon': '"$INSTALL_DIR/Penguins.ico"',
     'ShortcutPath': '',
     'LaunchOptions': launch_opts,
     'IsHidden': 0,
@@ -373,7 +451,7 @@ cat > "$DESKTOP_FILE" << DESKTOP
 Name=Penguins!
 Comment=WildTangent Puzzle Game (2006)
 Exec=$INSTALL_DIR/Penguins.sh
-Icon=$INSTALL_DIR/screenshots/02_main_menu_loaded.png
+Icon=$INSTALL_DIR/Penguins.ico
 Terminal=false
 Type=Application
 Categories=Game;
@@ -391,23 +469,34 @@ echo -e "${YELLOW}  The game will launch briefly, then close automatically.${NC}
 echo ""
 
 # Restart Steam to pick up shortcuts.vdf changes
-echo -e "${CYAN}  Restarting Steam...${NC}"
-pkill -x steam 2>/dev/null || true
-sleep 3
+STEAM_WAS_RUNNING=false
+if pgrep -f "/usr/bin/steam" >/dev/null 2>&1 || pgrep -x "steam" >/dev/null 2>&1; then
+    STEAM_WAS_RUNNING=true
+    echo -e "${CYAN}  Restarting Steam to load new shortcut...${NC}"
+    pkill -f "/usr/bin/steam" 2>/dev/null || pkill -x steam 2>/dev/null || true
+    sleep 3
+else
+    echo -e "${CYAN}  Starting Steam to register shortcut...${NC}"
+fi
 
-# Start Steam in the background
-nohup steam &>/dev/null &
-STEAM_PID=$!
+# Start Steam with display
+DISPLAY=:0 nohup steam &>/dev/null &
 
 # Wait for Steam to fully start
 echo -e "${CYAN}  Waiting for Steam to start...${NC}"
-for i in {1..30}; do
-    if pgrep -x "steam" >/dev/null 2>&1; then
+STEAM_STARTED=false
+for i in {1..45}; do
+    if pgrep -f "/usr/bin/steam" >/dev/null 2>&1 || pgrep -x "steam" >/dev/null 2>&1; then
+        STEAM_STARTED=true
         sleep 5  # Give Steam extra time to fully initialize
         break
     fi
     sleep 1
 done
+
+if [ "$STEAM_STARTED" = false ]; then
+    echo -e "${YELLOW}  Steam may not have started - you may need to restart it manually${NC}"
+fi
 
 # Find the game's Steam app ID from shortcuts
 if [ -n "$STEAM_USER_ID" ]; then
@@ -420,15 +509,27 @@ if [ -n "$STEAM_USER_ID" ]; then
     export PROTON_USE_WINED3D=1
     export WINEDLLOVERRIDES="d3d8=n"
 
-    # Launch and wait briefly for initialization
-    timeout 30 "$PROTON" run 'C:\Program Files (x86)\WildGames\Penguins!\penguins.exe' &>/dev/null &
-    GAME_PID=$!
+    # Launch silently (run without display to create paths without showing window)
+    echo -e "${CYAN}  Initializing game paths (no window will appear)...${NC}"
 
-    echo -e "${CYAN}  Game initializing (30 seconds max)...${NC}"
-    sleep 15
+    # Run game briefly with no display - creates registry/paths but no visible window
+    # Wine will error on display but paths are still initialized
+    (
+        unset DISPLAY
+        timeout 10 "$PROTON" run 'C:\Program Files (x86)\WildGames\Penguins!\penguins.exe' &>/dev/null 2>&1
+    ) &
+    INIT_PID=$!
 
-    # Kill the game
-    kill $GAME_PID 2>/dev/null || true
+    # Show progress animation
+    SPINNER="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+    for i in {1..10}; do
+        echo -ne "\r  ${CYAN}${SPINNER:$((i % 10)):1} Initializing...${NC}"
+        sleep 1
+    done
+    echo -ne "\r                        \r"
+
+    # Clean up any remaining processes
+    kill $INIT_PID 2>/dev/null || true
     pkill -f "penguins.exe" 2>/dev/null || true
     pkill -9 wineserver 2>/dev/null || true
 
@@ -452,12 +553,19 @@ echo -e "${YELLOW}▶ TO PLAY:${NC}"
 echo "  • Game Mode (RECOMMENDED): Find 'Penguins!' in your Steam library"
 echo "  • Desktop Mode: Double-click the desktop shortcut"
 echo ""
-echo -e "${YELLOW}▶ CONTROLS (Steam Deck):${NC}"
-echo "  Touch Screen → Tap and drag (works great!)"
+echo -e "${YELLOW}▶ NOTE:${NC}"
+echo "  The game shows a BLACK SCREEN for ~30-60 seconds on startup."
+echo "  This is normal! Wait for the WildTangent logo to appear."
+echo ""
+echo -e "${YELLOW}▶ CONTROLLER SETUP (first time only):${NC}"
+echo "  1. Select Penguins! in Game Mode"
+echo "  2. Press Steam button → Controller Settings"
+echo "  3. Choose 'Gamepad with Mouse Trackpad' template"
+echo ""
+echo -e "${YELLOW}▶ CONTROLS:${NC}"
+echo "  Touch Screen → Tap to click"
 echo "  Right Pad    → Mouse cursor"
 echo "  R2 Trigger   → Left click"
-echo ""
-echo -e "${CYAN}Tip: Game Mode is recommended for best mouse accuracy.${NC}"
 echo ""
 echo -e "${BLUE}Report bugs: https://github.com/deucebucket/penguins-steamdeck/issues${NC}"
 echo ""

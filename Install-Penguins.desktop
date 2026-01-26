@@ -1,8 +1,9 @@
 [Desktop Entry]
-Name=Install Penguins!
+Name=🐧 Install Penguins!
 Comment=One-click installer for Penguins! (Wild Tangent) on Steam Deck
-Exec=bash -c 'curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/install.sh | bash; read -p "Press Enter to close..."'
-Icon=application-x-executable
+Exec=bash -c 'cd ~/Games/Penguins 2>/dev/null || cd "$(dirname "$(realpath "$0")")" 2>/dev/null; if [ -f install.sh ]; then ./install.sh; echo; echo "Installation complete! Press Enter to close."; read; else echo "ERROR: install.sh not found"; echo "Make sure the game folder is extracted to ~/Games/Penguins"; read; fi'
+Icon=/home/deck/Games/Penguins/Penguins.ico
 Terminal=true
 Type=Application
 Categories=Game;Utility;
+StartupNotify=true
