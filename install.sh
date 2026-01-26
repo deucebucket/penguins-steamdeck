@@ -382,6 +382,63 @@ chmod +x "$DESKTOP_FILE" 2>/dev/null || true
 echo -e "${GREEN}  ✓ Desktop shortcut created${NC}"
 
 # ============================================
+# STEP 8: First run initialization
+# ============================================
+echo ""
+echo -e "${BLUE}[8/8] Initializing game (first run)...${NC}"
+echo -e "${YELLOW}  This creates all Steam paths and caches.${NC}"
+echo -e "${YELLOW}  The game will launch briefly, then close automatically.${NC}"
+echo ""
+
+# Restart Steam to pick up shortcuts.vdf changes
+echo -e "${CYAN}  Restarting Steam...${NC}"
+pkill -x steam 2>/dev/null || true
+sleep 3
+
+# Start Steam in the background
+nohup steam &>/dev/null &
+STEAM_PID=$!
+
+# Wait for Steam to fully start
+echo -e "${CYAN}  Waiting for Steam to start...${NC}"
+for i in {1..30}; do
+    if pgrep -x "steam" >/dev/null 2>&1; then
+        sleep 5  # Give Steam extra time to fully initialize
+        break
+    fi
+    sleep 1
+done
+
+# Find the game's Steam app ID from shortcuts
+if [ -n "$STEAM_USER_ID" ]; then
+    # Try to launch the game via Steam to initialize compatibility data
+    echo -e "${CYAN}  Launching game to initialize Steam paths...${NC}"
+
+    # Run the game directly first to create Proton paths
+    export STEAM_COMPAT_CLIENT_INSTALL_PATH="$STEAM_DIR"
+    export STEAM_COMPAT_DATA_PATH="$INSTALL_DIR/prefix"
+    export PROTON_USE_WINED3D=1
+    export WINEDLLOVERRIDES="d3d8=n"
+
+    # Launch and wait briefly for initialization
+    timeout 30 "$PROTON" run 'C:\Program Files (x86)\WildGames\Penguins!\penguins.exe' &>/dev/null &
+    GAME_PID=$!
+
+    echo -e "${CYAN}  Game initializing (30 seconds max)...${NC}"
+    sleep 15
+
+    # Kill the game
+    kill $GAME_PID 2>/dev/null || true
+    pkill -f "penguins.exe" 2>/dev/null || true
+    pkill -9 wineserver 2>/dev/null || true
+
+    sleep 2
+    echo -e "${GREEN}  ✓ First run initialization complete${NC}"
+else
+    echo -e "${YELLOW}  ⚠ Skipped - run game manually once to initialize${NC}"
+fi
+
+# ============================================
 # Done!
 # ============================================
 echo ""
@@ -391,28 +448,17 @@ echo -e "${GREEN}╚════════════════════
 echo ""
 echo -e "${CYAN}Game installed to:${NC} $INSTALL_DIR"
 echo ""
-echo -e "${YELLOW}▶ TO PLAY IN GAME MODE (RECOMMENDED):${NC}"
-echo "  1. Restart Steam (or switch to Game Mode)"
-echo "  2. Find 'Penguins!' in your library"
-echo "  3. Play!"
+echo -e "${YELLOW}▶ TO PLAY:${NC}"
+echo "  • Game Mode (RECOMMENDED): Find 'Penguins!' in your Steam library"
+echo "  • Desktop Mode: Double-click the desktop shortcut"
 echo ""
-echo -e "${YELLOW}▶ CONTROLS:${NC}"
+echo -e "${YELLOW}▶ CONTROLS (Steam Deck):${NC}"
 echo "  Touch Screen → Tap and drag (works great!)"
 echo "  Right Pad    → Mouse cursor"
 echo "  R2 Trigger   → Left click"
 echo ""
-echo -e "${CYAN}Note: Game Mode recommended. Desktop Mode has mouse offset issues.${NC}"
+echo -e "${CYAN}Tip: Game Mode is recommended for best mouse accuracy.${NC}"
 echo ""
 echo -e "${BLUE}Report bugs: https://github.com/deucebucket/penguins-steamdeck/issues${NC}"
 echo ""
-
-# Prompt to restart Steam
-read -t 30 -p "Restart Steam now to see the game? (y/n) " -n 1 -r REPLY || REPLY="n"
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Restarting Steam..."
-    pkill -x steam 2>/dev/null || true
-    sleep 3
-    nohup steam &>/dev/null &
-    echo -e "${GREEN}Steam restarting. Look for Penguins! in your library!${NC}"
-fi
+echo -e "${GREEN}Ready to play! Switch to Game Mode and have fun! 🐧${NC}"
