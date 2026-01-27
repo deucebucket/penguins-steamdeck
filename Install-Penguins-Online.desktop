@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Install Penguins! (Steam Deck)
+Comment=One-click installer - downloads and installs Penguins! automatically
+Exec=bash -c 'mkdir -p ~/Games/Penguins && cd ~/Games/Penguins && curl -sL https://github.com/deucebucket/penguins-steamdeck/archive/refs/heads/main.zip -o /tmp/penguins.zip && unzip -q -o /tmp/penguins.zip -d /tmp/ && cp -rf /tmp/penguins-steamdeck-main/* . && rm -rf /tmp/penguins.zip /tmp/penguins-steamdeck-main && chmod +x install.sh && ./install.sh; echo; echo "Press Enter to close."; read'
+Icon=applications-games
+Terminal=true
+Type=Application
+Categories=Game;

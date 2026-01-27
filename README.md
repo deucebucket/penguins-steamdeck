@@ -6,18 +6,19 @@ The game launches and gameplay works! **For best experience, run in Game Mode** 
 
 ---
 
-## Quick Start - TRUE ONE CLICK!
+## Quick Start - ONE CLICK INSTALL!
 
-### Option 1: One-Line Install (Recommended)
-Open Konsole and paste:
+### Download & Double-Click (Easiest)
+1. **[Download Install-Penguins-Online.desktop](https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/Install-Penguins-Online.desktop)**
+2. Save to your Desktop
+3. **Double-click it!**
+
+That's it! Downloads everything, installs, adds to Steam - all automatically!
+
+### Alternative: Terminal One-Liner
 ```bash
 curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/bootstrap.sh | bash
 ```
-That's it! Downloads, extracts, installs, adds to Steam - all automatically!
-
-### Option 2: Manual Download
-1. Download and extract repo to `~/Games/Penguins/`
-2. Double-click `Install-Penguins.desktop`
 
 ### After Install
 1. **Switch to Game Mode** and find 'Penguins!' in your Steam library
