@@ -6,12 +6,23 @@ The game launches and gameplay works! **For best experience, run in Game Mode** 
 
 ---
 
-## Quick Start
+## Quick Start - TRUE ONE CLICK!
 
-1. **Double-click `Install-Penguins.desktop`** (or run `./install.sh`)
-2. **Switch to Game Mode** and find 'Penguins!' in your Steam library
-3. **Set controller** (first time only - see Controller Setup below)
-4. **Wait ~30-60 seconds** on black screen - the WildTangent logo will appear!
+### Option 1: One-Line Install (Recommended)
+Open Konsole and paste:
+```bash
+curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/bootstrap.sh | bash
+```
+That's it! Downloads, extracts, installs, adds to Steam - all automatically!
+
+### Option 2: Manual Download
+1. Download and extract repo to `~/Games/Penguins/`
+2. Double-click `Install-Penguins.desktop`
+
+### After Install
+1. **Switch to Game Mode** and find 'Penguins!' in your Steam library
+2. **Set controller** (first time only - see Controller Setup below)
+3. **Wait ~30-60 seconds** on black screen - the WildTangent logo will appear!
 
 ---
 
