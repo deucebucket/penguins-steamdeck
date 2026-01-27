@@ -1,0 +1,115 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 strict//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title id="title">Timeout</title>	
+	<link rel="stylesheet" type="text/css" href="local_assets/css/wire.css">
+	
+	<!-- javascript library files -->
+	<script language="javascript" src="local_assets/js/queryString.js"></script>
+	
+	<!-- application javascript -->
+	<script language="javascript" src="local_assets/js/main.js"></script>
+	<script language="javascript" src="local_assets/js/start.js"></script>
+	
+	<script language="javascript">
+				
+		function Initialize()
+		{
+			window.onClose = function(){ window.external.ExitProcess() };
+			
+			ResolutionCheck();
+			
+			if ( window.external.GetSuspendReason == "maxsession" ) {
+				var playTime = (window.external.GetMaxSessionTime / 60 / 60);
+				document.getElementById( "feedback" ).innerHTML = "You've been playing for " + playTime.toFixed(0) + " hours (the maximum session time).<br /><br /><span style='font-weight:normal;'>While we're glad to see you enjoying our games, you should probably sleep.<br />No, seriously...go outside, or go to bed.</span>";
+			}
+			else if ( window.external.GetSuspendReason == "idle" ) {
+				document.getElementById( "feedback" ).innerHTML = "Your session has timed out due to inactivity.";
+			}
+			else if ( window.external.GetSuspendReason == "outoftrialtime" ) {
+				document.getElementById( "feedback" ).innerHTML = "Your trial period has expired.";
+			}
+			
+			var gracePeriodTime = Math.round( window.external.GetSaveGracePeriod / 60 );
+			var minutesTextDisplay = "minutes";
+			if ( gracePeriodTime.toFixed(0) == 1 ) {
+				minutesTextDisplay = "minute";
+			}
+			document.getElementById( "returnToGame" ).innerHTML = "Return to the game to save your progress.<br />It will close automatically after <b>" + gracePeriodTime.toFixed(0) + " " + minutesTextDisplay + "</b>.";
+		}
+		
+		function ReturnToGame()
+		{
+			window.external.StartSave();
+		}
+		
+		function ContinueWithWildCoins()
+		{
+			// return to start
+			window.external.ExitGame();
+			window.location = "start.html";
+		}
+		
+	</script>
+</head>
+
+<body scroll="no" leftmargin="0" topmargin="0" onload="Initialize();" ondragover="CancelEvent()">
+	<div id="header" style="top:0px;left:0px;z-index:3;width:965px;"><a href="start.html"><img src="local_assets/img/WIRE_brand.jpg" border="0" /></a><img src="local_assets/img/wire2_header_right.jpg" border="0" /></div>
+	
+	<table width="965" height="498" border="0" cellpadding="0" cellspacing="0" background="local_assets/img/wire2_content_bg.jpg" style="padding-top: 15px;" id="Table2">
+		<tr>
+			<td valign="top">
+				<div id="content_center" style="height: 373px;">
+					<table width="750" border="0" cellpadding="10" cellspacing="0" align="center" id="Table1">
+						<tr>
+							<td class="pageTitle" align="center">
+								<div id="feedback">&nbsp;</div>
+							</td>
+						</tr>
+						<tr>
+							<td align="center">
+								<div class="pageTitle">But fear not!  Your current game is still running.</div><br />What would you like to do?
+							</td>
+						</tr>
+						<tr>
+							<td align="center">
+								<img src="local_assets/img/button_return_to_game.gif" style="cursor:hand;" border="0" onclick="ReturnToGame()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /></a><br />
+								<div id="returnToGame">&nbsp;</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="pageTitle" align="center">
+								OR
+							</td>
+						</tr>
+						<tr>
+							<td align="center">
+								<img src="local_assets/img/button_play_with_wildcoins.gif" style="cursor:hand;" border="0" onclick="ContinueWithWildCoins()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br />
+								Return to the main menu and continue with a new session.<br />
+							</td>
+						</tr>
+						<tr>
+							<td align="center">&nbsp;</td>
+						</tr>
+						<tr>
+							<td align="center">
+								<img src="local_assets/img/button_exit_game.gif" style="cursor:hand;" border="0" onclick="window.external.ExitProcess()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
+	
+	<div id="bottom_bar" style="position:absolute;top:622px;left:0px;z-index:2"><img src="local_assets/img/wire2_footer.jpg" usemap="#wire_footer" border="0" /></div>
+</body>
+
+<!--- image maps --->
+<map name="wire_footer">
+	<area shape="rect" coords="33,6,116,21" title="Terms of Use" href="javascript:OpenRedirector('termsofuse.aspx')">
+	<area shape="rect" coords="137,6,173,21" title="Help" href="offline_help.html" target="_top">
+	<area shape="rect" coords="195,6,393,21" title="EULA" href="javascript:OpenRedirector('eula.aspx')">
+</map>
+
+</html>

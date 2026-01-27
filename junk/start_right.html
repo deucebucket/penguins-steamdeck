@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title></title>
+
+	<style>
+		.largeText
+		{
+			font-size: 18px;
+			font-weight: bold;
+			font-family: arial;
+		}
+		
+		.largeTextColor
+		{
+			color: #00209F;
+			font-size: 18px;
+			font-weight: bold;
+			font-family: arial;
+		}
+		
+		.content
+		{
+			font-size: 12px;
+			font-family: arial;
+		}
+
+		a.contentHref
+		{
+			color: #00209F;
+			font-family: arial;
+		}
+
+		a.contentHref:hover
+		{
+			color: #0173F3;
+			text-decoration: none;
+		}
+	</style>
+
+	<script language="javascript" src="local_assets/js/div.js"></script>
+	<script language="javascript" src="local_assets/js/main.js"></script>
+
+	<script language="javascript">
+	
+		var _onlineCheck = false;
+		var _isOwned = window.external.GetIsOwned;
+	
+		function Initialize()
+		{			
+			if ( _isOwned || !_isPurchaseable ) {
+				HideDiv( "unlock_buy" );
+			}
+		}
+
+		function HideAllContent()
+		{
+			HideDiv( "contentSponsored" );
+			HideDiv( "contentTrial" );
+			HideDiv( "contentWildCoins" );
+			HideDiv( "contentWildCoinsSignedIn" );
+		}
+
+		function ChangeImage( imageElement, imageUrl )
+		{
+			if ( imageElement == "contentImage" ) {
+				HideAllContent();
+			}
+			document.getElementById( imageElement ).src = imageUrl;
+		}
+		
+		function ChangeSponsorImage( imageUrl )
+		{
+			document.getElementById( "sponsorImage" ).src = imageUrl;
+		}
+		
+		function RedirectRightPage( url )
+		{
+			window.location = url;
+		}
+		
+		function RedirectPage( url )
+		{
+			parent.location = url;
+		}
+		
+		function RefreshState()
+		{
+			if ( document.getElementById( "contentWildCoinsSignedIn" ).style.visibility == "visible" ) {
+				HideDiv( "contentWildCoinsSignedIn" );
+				ShowDiv( "contentWildCoins" );
+			}
+		}
+		
+		function NavigateLogin()
+		{
+			if ( window.external.IsOnline ) {
+				parent.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/LoginRegister.aspx&nextUrl=start.html&nextUrlType=offline";
+			}
+			else
+			{
+				parent.location = "login.html";
+			}
+		}
+		
+		function NavigateHowItWorks()
+		{
+			parent.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/HowItWorks.aspx&backUrl=start.html&backUrlType=offline";
+		}
+		
+		function NavigateCart()
+		{
+			parent.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/Cart.aspx&backUrl=start.html&backUrlType=offline&buyGame=1";
+		}
+	</script>
+
+</head>
+<body background="local_assets/img/wire2_content_right_bg.jpg" leftmargin="0" topmargin="0" onload="Initialize()" scroll="no" ondragover="CancelEvent()">
+
+<!--- top image (for swap) --->
+<div id="topContent" style="position:absolute;top:0px;left:0px;width:340px;z-index:3;" class="content"><img id="contentImage" src="local_assets/img/spacer.gif" /></div>
+
+<!--- content for sponsorship  --->
+<div id="contentSponsored" style="position:absolute;top:0px;left:0px;width:340px;z-index:2;visibility:hidden;" class="content" align="center">
+	<span class="largeTextColor">* Full Version Access</span><br />
+	<span class="largeTextColor">* Play As Long As You Want</span><br /><br />
+	<span class="largeText">Enjoy Playing<br/>your FREE<br />Game Session</span><br /><br />
+	<img id="sponsorImage" src="local_assets/img/spacer.gif" alt="" /><br /><br />
+</div>
+
+<!--- content for trial  --->
+<div id="contentTrial" style="position:absolute;top:0px;left:0px;width:340px;z-index:2;visibility:hidden;" class="content" align="center">
+	<br />
+	<span class="largeTextColor">* Full Version Access</span><br />
+	<span class="largeTextColor">* Play As Long As You Want</span><br /><br />
+	<img src="local_assets/img/spacer.gif" height="30" alt="" /><br />
+	<span class="largeText">Enjoy Playing<br/>your FREE<br />Game Session</span><br />
+	<img src="local_assets/img/spacer.gif" height="50" alt="" /><br />
+</div>
+
+<!--- content for WildCoins --->
+<div id="contentWildCoins" style="position:absolute;top:0px;left:0px;width:340px;z-index:2;visibility:hidden;" class="content" align="center">
+	<br />
+	<span class="largeTextColor">* Full Version Access</span><br />
+	<span class="largeTextColor">* Play As Long As You Want</span><br /><br />
+	<span class="largeText">Keep Playing with<br />WildCoins!</span><br /><br />
+	<a href="javascript:NavigateLogin();" class="contentHref">Log In</a><br /><br />
+	<a href="javascript:NavigateHowItWorks();" class="contentHref">Learn About WildCoins</a><br />
+	<img src="local_assets/img/spacer.gif" height="100" alt="" /><br />
+</div>
+<!--- content for WildCoins (signed in) --->
+<div id="contentWildCoinsSignedIn" style="position:absolute;top:0px;left:0px;width:340px;z-index:2;visibility:hidden;" class="content" align="center">
+	<br />
+	<span class="largeTextColor">* Full Version Access</span><br />
+	<span class="largeTextColor">* Play As Long As You Want</span><br /><br /><br />
+	<span class="largeText">Welcome!</span><br /><br />
+	<span class="largeText">Let's Play a Game!</span><br /><br />
+	<img src="local_assets/img/spacer.gif" height="120" alt="" /><br />
+</div>
+
+<!--- unlock / buy div --->
+<div id="unlock_buy" style="position:absolute;top:265px;left:0px;width:340px;z-index:2;" class="content" align="center">
+	<span class="content"><strong>Want to own this game?</strong></span><br />
+	<a href="javascript:NavigateCart();" class="contentHref">Buy Now</a><br /><br />
+	<span class="content"><strong>Use Unlock Code</strong></span><br />
+	<a href="unlock.html" class="contentHref" target="_top">Unlock</a>
+</div>
+</body>
+</html>

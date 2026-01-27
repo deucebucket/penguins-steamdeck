@@ -1,0 +1,234 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 strict//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title id="title">start</title>	
+	<link rel="stylesheet" type="text/css" href="local_assets/css/wire.css">
+	
+	<!-- javascript library files -->
+	<script language="javascript" src="local_assets/js/string.js"></script>
+	<script language="javascript" src="local_assets/js/queryString.js"></script>
+	<script language="javascript" src="local_assets/js/div.js"></script>
+	<script language="javascript" src="local_assets/js/cookie.js"></script>
+	
+	<!-- application javascript -->
+	<script language="javascript" src="local_assets/js/main.js"></script>
+	<script language="javascript" src="local_assets/js/start.js"></script>
+</head>
+
+<body scroll="no" leftmargin="0" topmargin="0" onload="Initialize();" bgcolor="#2D4DA5" ondragover="CancelEvent()">
+	<!--- floating text --->
+	<div id="sessionsRemaining" style="position: absolute; left: 365px; top: 313px;"></div>
+	<div id="sessionCost" style="position: absolute; left: 584px; top: 426px; font-size:12px; font-weight:bold; color:#FFF;z-index:4;"></div>
+	<div id="sessionCostShadow" style="position: absolute; left: 586px; top: 428px; font-size:12px; font-weight:bold; color:#000;z-index:3;"></div>
+	<div id="sessionCost2" style="position: absolute; left: 575px; top: 266px; font-size:14px; font-weight:bold; color:#000;visibility: hidden; display: none;z-index:3;"></div>
+	<div id="feedback" style="position: absolute; left: 132px; top: 132px; width:490px; font-size:11px; color:#A90000;z-index:3;" align="center"></div>
+
+	<!--- local wildcoins --->
+	<div id="using_local_coins" style="position: absolute; left: 122px; top: 132px;height:32px;width:490px; font-size:12px; color:#00209F;visibility: hidden; display: none;z-index:3;" align="center"></div>
+	<div id="screen_blackout" style="position: absolute; left: 0px; top: 0px;height:650px;width:965px; visibility: hidden; display: none;z-index:4;background-color:#000D33;filter:alpha(opacity=90);" align="center"></div>
+	<div id="local_wildcoin_firewall" style="position: absolute; left: 303px; top: 236px;height:650px;width:965px; visibility: hidden; display: none;z-index:4;">
+		<a href="offline_help.html" target="_top"><img src="local_assets/img/start_popup_title_firewall.gif" border="0" alt="" usemap="#local_wildcoins" /></a><br>
+		<img src="local_assets/img/start_popup_confirm.gif" border="0" alt="" /><br>
+		<img src="local_assets/img/start_popup_bottom.gif" border="0" alt="" /><br>
+		<div id="local_wildcoin_out_yes" style="position: absolute; left: 46px; top: 130px;width:104px;height:37;z-index:5;">
+			<img src="local_assets/img/start_popup_yes.gif" style="cursor:hand;" border="0" alt="" onclick="PlayWithOfflineCoinsFast()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br>
+		</div>
+		<div id="local_wildcoin_out_getmore" style="position: absolute; left: 210px; top: 130px;width:104px;height:37;z-index:5;">
+			<img src="local_assets/img/start_popup_no.gif" style="cursor:hand;" border="0" alt="" onclick="CloseLocalWildCoinsPopup()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br>
+		</div>g
+	</div>
+	<div id="local_wildcoin_out" style="position: absolute; left: 303px; top: 236px;height:650px;width:965px; visibility: hidden; display: none;z-index:4;">
+		<a href="offline_help.html" target="_top"><img src="local_assets/img/start_popup_title_notenough.gif" border="0" alt="" usemap="#local_wildcoins" /></a><br>
+		<img src="local_assets/img/start_popup_confirm.gif" border="0" alt="" /><br>
+		<img src="local_assets/img/start_popup_bottom.gif" border="0" alt="" /><br>
+		<div id="Div1" style="position: absolute; left: 46px; top: 130px;width:104px;height:37;z-index:5;">
+			<img src="local_assets/img/start_popup_yes.gif" style="cursor:hand;" border="0" alt="" onclick="PlayWithOfflineCoinsFast()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br>
+		</div>
+		<div id="Div2" style="position: absolute; left: 210px; top: 130px;width:104px;height:37;z-index:5;">
+			<img src="local_assets/img/start_popup_getmore.gif" style="cursor:hand;" border="0" alt="" onclick="window.location = 'going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/OutOfPlay.aspx&alt=start_no_trials.html';" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br>
+		</div>
+	</div>
+	<div id="local_balance_and_cost" style="position: absolute; left: 310px; top: 338px;height:22px;width:344px; visibility: hidden; display: none;z-index:5;" class="content" align="center"></div>
+	
+	<!--- header --->
+	<div id="header" style="position:absolute;top:0px;left:0px;z-index:3;width:965px;"><img src="local_assets/img/WIRE_brand.jpg" border="0" /><img src="local_assets/img/wire2_header_right.jpg" border="0" /></div>
+	<div id="tabBlock" style="position:absolute;top:400px;left:400px;z-index:0;"><input type="button" id="tabBlockInput" onblur="ResetTabFocus();"></div>
+	<div id="headerSpacer"><img src="local_assets/img/spacer.gif" border="0" height="127" /></div>
+	<div id="menuTabs" style="position:absolute;top:101px;left:675px;z-index:3;width:250px;"><a href="javascript:NavigateMyAccount()"><img src="local_assets/img/wire2b_tab_my_account.gif" border="0" /></a><a href="going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/HowItWorks.aspx&backUrl=start.html&backUrlType=offline"><img src="local_assets/img/wire2b_tab_wildcoins.gif" id="wildcoins_tab" border="0" /></a></div>
+	<div id="updateButton" style="position:absolute;top:40px;left:335px;z-index:3;visibility:hidden;display:none;"><a href="" id="updateActionHref"><img src="local_assets/img/button_get_latest.gif" id="updateButtonImg" border="0" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /></a></div>
+
+	<!--- loading graphics --->
+	<div id="loadingDoorLeft" style="position:absolute;top:124px;left:0px;z-index:4;"><img src="local_assets/img/spacer.gif" width="547" height="498" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='local_assets/img/loading_door_left.png', sizingMethod='scale')" /></div>
+	<div id="loadingDoorRight" style="position:absolute;top:124px;left:417px;z-index:4;"><img src="local_assets/img/spacer.gif" width="548" height="498" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='local_assets/img/loading_door_right.png', sizingMethod='scale')" /></div>
+	<div id="loadingIcon" style="position:absolute;top:344px;left:444px;z-index:5;"><img src="local_assets/img/loading_icon.gif" /></div>
+	
+	<!--- main game interface --->
+	<div id="mainPanel" style="position:absolute;top:150px;left:120px;z-index:2">
+		<table width="491" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td>
+					<table width="313" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td><img src="local_assets/img/wire2b_main_top_left.gif" /></td>
+						</tr>
+						<tr>
+							<td><img src="local_assets/img/wire2b_main_left_1.gif" /><img src="local_assets/img/title.jpg" /></td>
+						</tr>
+						<tr>
+							<td><img src="local_assets/img/wire2b_main_left_2.gif" /><img src="local_assets/img/wire2b_main_about_game.gif" style="cursor:hand;" onmouseover="ShowToolTip('tooltip_gameinfo');" /><a href="http://wildboards.wildtangent.com" id="leaderboardLink" target="_blank"><img src="local_assets/img/wire2b_main_leaderboards.gif" border="0" onmouseover="HideToolTip('tooltip_gameinfo');ShowToolTip('tooltip_leaderboards');" onmouseout="HideToolTip('tooltip_leaderboards');" /></a><a href="https://forum.wildtangent.com" target="_blank"><img src="local_assets/img/wire2b_main_community.gif" border="0" onmouseover="HideToolTip('tooltip_gameinfo');ShowToolTip('tooltip_community');" onmouseout="HideToolTip('tooltip_community');" /></a></td>
+						</tr>
+						<tr>
+							<td>
+								<img src="local_assets/img/wire2b_main_bottom_left.gif" />
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td width="13">
+					<img src="local_assets/img/wire2b_main_center.gif" />
+				</td>
+				<td><img src="local_assets/img/wire2b_main_top_right.gif" /><br />
+					<div id="playTrial"><img src="local_assets/img/wire2_home_token_demo.gif" style="cursor:hand;" id="tokenSlotImgTrial" border="0" onclick="PlayTrial()" /><br /><img src="local_assets/img/wire2_home_play_top.gif" /><br /><img src="local_assets/img/wire2_home_play.gif" style="cursor:hand;" border="0" onclick="PlayTrial()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br /><img src="local_assets/img/wire2_home_play_bottom.gif" /><br /></div>
+					<div id="playSponsored" style="visibility: hidden; display: none;">
+						<img src="local_assets/img/wire2_home_token_demo.gif" style="cursor:hand;" id="sponsorCoinAnim" onclick="PlaySponsored()" border="0" /><br /><img src="local_assets/img/wire2_home_play_top.gif" /><br /><img src="local_assets/img/wire2_home_play.gif" style="cursor:hand;" border="0" onclick="PlaySponsored()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br /><img src="local_assets/img/wire2_home_play_bottom.gif" /><br /><div id="sponsoredBy" style="display: none;"></div>
+					</div>
+					<div id="playTokensDiv" style="visibility: hidden; display: none;">
+						<img src="local_assets/img/wire2_home_token_usertoken.gif" style="cursor:hand;" id="tokenSlotImg" name="tokenSlotImg" border="0" onclick="SubmitWildCoins()" /><br /><img src="local_assets/img/wire2_home_play_top.gif" /><br /><img src="local_assets/img/wire2_home_play.gif" style="cursor:hand;" border="0" onclick="SubmitWildCoins()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br /><img src="local_assets/img/wire2_home_play_bottom.gif" /><br /><div id="tokenCost" style="display: none;"></div>
+					</div>
+					<div id="playFree" style="visibility: hidden; display: none;">
+						<img src="local_assets/img/wire2_home_owned_top.jpg" border="0" /><br /><img src="local_assets/img/wire2_home_owned_play.gif" style="cursor:hand;" border="0" onclick="PlayFree()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br /><img src="local_assets/img/wire2_home_owned_bottom.jpg" border="0" /><br /><img src="local_assets/img/wire2b_main_bottom_right.gif" />
+					</div>
+					<div id="playNoWildCoins" style="visibility: hidden; display: none;">
+						<img src="local_assets/img/wire2_home_owned_top.jpg" border="0" /><br /><img src="local_assets/img/wire2_home_owned_play.gif" style="cursor:hand;" border="0" onclick="PlayOutOfTrialsNoWildCoins()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br /><img src="local_assets/img/wire2_home_owned_bottom.jpg" border="0" /><br /><img src="local_assets/img/wire2b_main_bottom_right.gif" />
+					</div>
+					<div id="playOwned" style="visibility: hidden; display: none;">
+						<img src="local_assets/img/wire2_home_owned_top.jpg" border="0" /><br /><img src="local_assets/img/wire2_home_owned_play.gif" style="cursor:hand;" border="0" onclick="PlayOwnedGame()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br /><img src="local_assets/img/wire2_home_owned_bottom.jpg" border="0" /><br /><img src="local_assets/img/wire2b_main_bottom_right.gif" />
+					</div>
+					<div id="quickPlay">
+						<img src="local_assets/img/wire2_home_quickplay.gif" border="0" onclick="QuickPlay()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" style="cursor:hand;" /><br /><img src="local_assets/img/wire2b_main_bottom_right.gif" />
+					</div>
+					<div id="quickPlayPh" style="visibility:hidden;display:none;">
+						<img src="local_assets/img/wire2_home_quickplay_ph.gif" border="0" /><br /><img src="local_assets/img/wire2b_main_bottom_right.gif" />
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<!--- exit button --->
+	<div id="exit_button" style="position:absolute;top:417px;left:445px;z-index:2;visibility:hidden;">
+		<a href="javascript:window.external.ExitProcess();"><img src="local_assets/img/wire2_home_exit.gif" border="0" alt="" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /></a>
+	</div>
+	
+	<!--- background --->
+	<div id="contentBG" style="position:absolute;top:124px;left:0px;z-index:1">
+		<table width="965" height="498" border="0" cellpadding="0" cellspacing="0" background="local_assets/img/wire2_content_bg.jpg">
+			<tr>
+				<td valign="top">
+					
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<!--- top login text --->
+	<div id="notSignedIn" style="position:absolute;top:40px;left:578px;width:331px;z-index:3;" class="welcomeText" align="center"><b>Hello!</a><br /><a href="javascript:NavigateLogin();" class="welcomeLink">Log in</a></b></div>
+	<div id="signedIn" style="position:absolute;top:40px;left:675px;visibility: hidden; display: none;z-index:3;" class="welcomeTextSm"></div>
+
+	<!--- right column --->
+	<div id="wildCoinsContentRight" style="position:absolute;top:151px;left:618px;width:342px;height:344px;z-index:1;">
+		<table width="342" height="344" border="0" cellpadding="0" cellspacing="0" id="Table4">
+			<tr>
+				<td><iframe name="content_right_iframe" id="content_right_iframe" src="start_right.html" style="width:342px;height:344px;" scrolling="no" frameborder="0"></iframe></td>
+			</tr>
+		</table>
+	</div>
+
+	<!--- Tooltips --->
+	<div id="tooltip_gameinfo_bg" style="position:absolute;top:226px;left:145px;width:282px;height:221px;z-index:2;filter:alpha(opacity=0);visibility:hidden;"><img src="local_assets/img/spacer.gif" width="282" height="221" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='local_assets/img/tooltip_lg.png', sizingMethod='scale')" /></div>
+	<div id="tooltip_gameinfo" style="position:absolute;top:230px;left:150px;width:282px;height:178px;z-index:2;filter:alpha(opacity=0);visibility:hidden;overflow:hidden;">
+		<div id="closeTip" style="position:absolute;width:282px;left:255px;top:0px;"><a href="javascript:HideToolTip('tooltip_gameinfo');"><img src="local_assets/img/gameinfo_close.gif" border="0" /></a></div>
+		<div id="scrollUp" style="position:absolute;width:282px;left:255px;top:20px;"><img src="local_assets/img/gameinfo_scroll_up.gif" border="0" onmouseover="scrollUp();" onmouseout="stopScrolling();" /></div>
+		<div id="scrollDown" style="position:absolute;width:10px;left:255px;top:165px;"><img src="local_assets/img/gameinfo_scroll_down.gif" border="0" onmouseover="scrollDown();" onmouseout="stopScrolling();" /></div>
+		
+		<script language="javascript">
+			document.write('<div id="container" style="position:relative;width:245px;height:175px;overflow:hidden;">');
+			document.write('<div id="contentScroller" style="position:absolute;width:245px;left:0px;top:5px">');
+		</script>
+		
+		<!--- Game-specific title & description  --->
+		<div id="gameText"></div>
+
+		<script language="javascript">
+			document.write('</div>');
+			document.write('</div>');
+			var crossobj = document.getElementById( "contentScroller");
+			var contentheight = crossobj.offsetHeight;
+		</script>
+	
+	</div>
+	<!--- Prevents the selection of gameInfo text --->
+	<div id="gameInfoCover" style="position:absolute;top:235px;left:150px;z-index:3;"><img src="local_assets/img/spacer.gif" width="250" height="180" /></div>
+	
+	<div id="tooltip_leaderboards_bg" style="position:absolute;top:367px;left:229px;width:177px;height:77px;z-index:2;filter:alpha(opacity=0);visibility:hidden;"><img src="local_assets/img/spacer.gif" width="177" height="77" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='local_assets/img/tooltip.png', sizingMethod='scale')" /></div>
+	<div id="tooltip_leaderboards" style="position:absolute;top:377px;left:229px;width:177px;height:77px;z-index:2;filter:alpha(opacity=0);visibility:hidden;" align="center">
+		<table width="177" cellpadding="5" cellspacing="0" border="0" id="Table2">
+			<tr>
+				<td>
+					<span class="white" style="font-size:12px;">Click here to visit the leaderboards.</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div id="tooltip_community_bg" style="position:absolute;top:367px;left:342px;width:177px;height:77px;z-index:2;filter:alpha(opacity=0);visibility:hidden;"><img src="local_assets/img/spacer.gif" width="177" height="77" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='local_assets/img/tooltip.png', sizingMethod='scale')" /></div>
+	<div id="tooltip_community" style="position:absolute;top:377px;left:342px;width:177px;height:77px;z-index:2;filter:alpha(opacity=0);visibility:hidden;" align="center">
+		<table width="177" cellpadding="5" cellspacing="0" border="0" id="Table3">
+			<tr>
+				<td>
+					<span class="white" style="font-size:12px;">Click here to visit the<br />WildGames forums.</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<!--- end tooltips --->
+
+	<!--- config & advertisement --->
+	<div id="config_banner" style="position:absolute;top:511px;left:120px;z-index:2;visibility:hidden"><iframe id="configFrame" src="" width="728" height="90" frameBorder="0" scrolling="no"></iframe></div>
+
+	<!--- online detection --->
+	<div id="online_check" style="position:absolute;top:0px;left:0px;z-index:1;"><iframe id="onlineCheck" src="" width="1" height="1" frameborder="0" scrolling="no"></iframe></div>
+	
+	<!--- firewall warning --->
+	<div id="firewall_warning_bg" style="position:absolute;top:511px;left:120px;z-index:3;visibility:hidden;display:none;"><img src="local_assets/img/firewall_warning_bg.jpg" border="0" /></div>
+	<div id="firewall_warning" style="position:absolute;top:511px;left:120px;z-index:3;visibility:hidden;display:none;"><a href="offline_help.html" target="_top"><img src="local_assets/img/firewall_warning.gif" border="0" /></a></div>
+	<div id="offline_warning" style="position:absolute;top:511px;left:120px;z-index:3;visibility:hidden;display:none;"><a href="offline_help.html" target="_top"><img src="local_assets/img/offline_warning.gif" border="0" /></a></div>
+
+	<!--- config & advertisement --->
+	<div id="offline_banner" style="position:absolute;top:511px;left:120px;z-index:3; visibility:hidden;display:none;"><a href="javascript:NavigateOnlineNew('http://www.wildgames.com');"><img src="local_assets/img/offline_banner.jpg" border="0" alt="" /></a></div>
+	
+	<!--- footer, sound controls --->
+	<div id="bottom_bar" style="position:absolute;top:622px;left:0px;z-index:2"><img src="local_assets/img/wire2_footer.jpg" usemap="#wire_footer" border="0" /></div>
+	<div id="offScreen" style="position:absolute;top:660px;left:0px;z-index:0;">
+		<embed src="local_assets/DepositCoin.wav" hidden="false" loop="false" autostart="false" name="coinSound" id="coinSound">
+		<embed src="local_assets/DoorOpen.wav" hidden="false" loop="false" autostart="false" name="doorSound" id="doorSound">
+	</div>
+	
+	<!--- prevents users from canceling a game launch after spending WildCoins --->
+	<div id="UI_block" style="position:absolute;top:0px;left:0px;z-index:6;visibility:hidden;display:none;"><img src="local_assets/img/spacer.gif" width="965" height="654" /></div>
+
+</body>
+
+<!--- image maps --->
+<map name="wire_footer">
+	<area shape="rect" coords="33,6,116,21" title="Terms of Use" href="javascript:OpenRedirector('termsofuse.aspx')">
+	<area shape="rect" coords="137,6,173,21" title="Help" href="offline_help.html" target="_top">
+	<area shape="rect" coords="195,6,393,21" title="EULA" href="javascript:OpenRedirector('eula.aspx')">
+</map>
+
+<map name="local_wildcoins">
+	<area shape="rect" coords="336,17,360,0" title="Exit Window" href="javascript:CloseLocalWildCoinsPopup()">
+</map>
+
+
+</html>

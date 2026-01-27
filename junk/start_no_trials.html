@@ -1,0 +1,151 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title id="title">outofplay</title>
+	
+	<link rel="stylesheet" type="text/css" href="local_assets/css/wire.css">
+	<script language="javascript" src="local_assets/js/queryString.js"></script>
+	<script language="javascript" src="local_assets/js/main.js"></script>
+	<script language="javascript" src="local_assets/js/div.js"></script>
+
+	<script language="javascript">
+
+		function Initialize()
+		{
+			window.onClose = function(){ window.external.ExitProcess() };
+			
+			if ( window.external.GetTrialSessionLeft > 0 ) {
+				HideDiv( "outOfPlayTitle" );
+			}
+			
+			ResolutionCheck();
+			
+			var gameName = window.external.Get( "gameDisplayName" );
+			
+			document.getElementById( "gameText" ).innerHTML = "Want to play another<br />Game session of<br />" + gameName + "?";
+			document.getElementById( "gameTextRight" ).innerHTML = gameName;
+			
+			if ( window.external.IsLoggedIn ) {
+				HideDiv( "left_content" );
+				ShowDiv( "left_content_signed_in" );
+			}
+			
+			if ( !_isPurchaseable ) {
+				HideDiv( "right_content" );
+				HideDiv( "center_line" );
+				document.getElementById( "left_content" ).style.left = "250px";
+			}
+			
+			if ( !_canUseWildCoins ) {
+				HideDiv( "left_content" );
+				HideDiv( "center_line" );
+				document.getElementById( "right_content" ).style.left = "250px";
+			}
+		}
+		
+		function NavigateGetMore()
+		{
+			window.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/GetWildCoins.aspx&backUrl=start.html&backUrlType=offline";
+		}
+		
+		function NavigateLearnMore()
+		{
+			window.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/HowItWorks.aspx&backUrl=start.html&backUrlType=offline";
+		}
+		
+		function NavigateBuyNow()
+		{
+			window.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/Cart.aspx&backUrl=start.html&backUrlType=offline&buyGame=1";
+		}
+		
+		function NavigateLogin()
+		{
+			if ( window.external.IsOnline ) {
+				window.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/LoginRegister.aspx&nextUrl=start.html&nextUrlType=offline&alt=login.html";
+			}
+			else {
+				window.location = "login.html";
+			}
+		}
+		
+	</script>
+</head>
+
+<body scroll="no" leftmargin="0" topmargin="0" onload="Initialize();" ondragover="CancelEvent()">
+
+	<!--- header --->
+	<table width="965" border="0" cellpadding="0" cellspacing="0" background="local_assets/img/wire2_header_right.jpg" id="Table1">
+		<tr>
+			<td><a href="start.html"><img src="local_assets/img/WIRE_brand.jpg" border="0" /></a></td>
+		</tr>
+	</table>		
+	
+	<!--- content --->
+	<table width="965" height="498" border="0" cellpadding="20" cellspacing="0" background="local_assets/img/wire2_content_bg.jpg" id="Table2">
+		<tr>
+			<td valign="top"></td>
+		</tr>
+	</table>
+	
+	<!--- feedback --->
+	<div id="feedback" style="position:absolute;left:240px;top:200px;width:500px;font-family:arial;font-size:12px;color:#A90000;z-index:2;" align="center"></div>
+	
+
+	<!--- center --->
+	<div id="outOfPlayTitle" style="position:absolute;top:133px;left:0px;width:965px;z-index:2;" align="center">
+		<span class="sectionTitleColorXLarge">This game is out of FREE game sessions.</span>
+	</div>
+	<div id="center_line" style="position:absolute;top:180px;left:483px;width:1px;z-index:2;" align="center">
+		<img src="local_assets/img/outofplay_divider.gif" alt="" />
+	</div>
+	
+	<!--- left --->
+	<div id="left_content" style="position:absolute;top:190px;left:36px;width:446px;height:330;z-index:2;" align="center">
+		<div id="gameText" class="contentXXLarge"></div><br />
+		<span class="contentXLarge">Sign up for WildCoins today.<br />It's cheap, convenient, and more!</span><br /><br />
+		<table width="80%" cellpadding="2" cellspacing="0" border="0" id="Table3">
+			<tr>
+				<td width="50%"><img src="local_assets/img/coin_stack.gif" border="0" alt="" /></td>
+				<td><td width="50%" align="center"><img src="local_assets/img/wildcoins_logo.gif" border="0" alt="" /><br /><br /><img src="local_assets/img/button_lg_learn_more.gif" style="cursor:hand;" border="0" alt="" onclick="NavigateLearnMore()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /></a></td></td>
+			</tr>
+		</table><br />
+		<span class="content">Already have a WildCoins account? <a href="javascript:NavigateLogin()" class="contentHref">click to login</a></span>
+	</div>
+	
+	<div id="left_content_signed_in" style="position:absolute;top:190px;left:36px;width:446px;height:330;z-index:2;visibility:hidden;display:none;" align="center">
+		<span class="contentXXXLarge">Oops!<br />You need more WildCoins.</span><br /><br />
+		<span class="contentXLarge">Your WildCoins account currently <br />does not have enough coins <br />to play this game.</span><br /><br />
+		<span class="content">Let's get a pack of WildCoins now and get back to playing!</span><br /><br />
+		<table width="80%" cellpadding="2" cellspacing="0" border="0" id="Table4">
+			<tr>
+				<td width="50%"><img src="local_assets/img/coin_stack.gif" border="0" alt="" /></td>
+				<td><td width="50%" align="center"><img src="local_assets/img/wildcoins_logo.gif" border="0" alt="" /><br /><br /><img src="local_assets/img/button_lg_get_more.gif" style="cursor:hand;" border="0" alt="" onclick="NavigateGetMore()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /></td></td>
+			</tr>
+		</table>
+	</div>
+	
+	<!--- right --->
+	<div id="right_content" style="position:absolute;top:190px;left:483px;width:483px;height:330;z-index:2;" align="center">
+		<span class="contentXXXLarge">Own It Today!</span><br />
+		<div id="gameTextRight" class="contentXXLarge"></div><br />
+		<img src="local_assets/img/feature.jpg" alt="" /><br /><br />
+		<span class="contentXLarge">No WildCoins Needed</span><br /><br />
+		<img src="local_assets/img/button_lg_buy_now.gif" style="cursor:hand;" border="0" alt="" onclick="NavigateBuyNow()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+	</div>
+	
+	<!--- buttons --->
+	<div id="back_button" style="position:absolute;top:548px;left:36px;width:434px;height:214px;z-index:2;">
+		<img src="local_assets/img/button_back.gif" style="cursor:hand;" border="0" alt="" onclick="window.external.NavigateLocal( 'start.html' );" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+	</div>
+	
+	<!--- footer --->
+	<div id="bottom_bar"><img src="local_assets/img/wire2_footer.jpg" usemap="#wire_footer" border="0" /></div>
+</body>
+
+<!--- image maps --->
+<map name="wire_footer">
+	<area shape="rect" coords="33,6,116,21" title="Terms of Use" href="javascript:OpenRedirector('termsofuse.aspx')">
+	<area shape="rect" coords="137,6,173,21" title="Help" href="offline_help.html" target="_top">
+	<area shape="rect" coords="195,6,393,21" title="EULA" href="javascript:OpenRedirector('eula.aspx')">
+</map>
+
+</html>

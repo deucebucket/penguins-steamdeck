@@ -1,0 +1,125 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 strict//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title id="title">interstitial</title>
+	
+	<link rel="stylesheet" type="text/css" href="local_assets/css/wire.css">
+	<script language="javascript" src="local_assets/js/queryString.js"></script>
+	<script language="javascript" src="local_assets/js/main.js"></script>
+	<script language="javascript" src="local_assets/js/div.js"></script>
+
+	<script language="javascript">
+
+		var urlParams = ReadURLParams();
+
+		if ( window.external.IsOnline && urlParams.end == null ) {
+			window.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/End.aspx&alt=end.html";
+		}
+
+		function Initialize()
+		{
+			window.onClose = function(){ window.external.ExitProcess() };
+			
+			ResolutionCheck();
+			
+			var gameName = window.external.Get( "gameDisplayName" );
+			var playType = window.external.Get( "playType" );
+			
+			var _location = "end";
+			var _version = "2.0";
+			
+			switch ( playType )
+			{
+				case "freeTrial":
+				{
+					document.getElementById( "providedByText" ).innerHTML = "This Free Game Session was provided using WildCoins!";
+					break;
+				}
+				case "wildcoins":
+				{
+					document.getElementById( "providedByText" ).innerHTML = "This Game Session was provided using WildCoins!";
+					break;
+				}
+				case "sponsored":
+				{	
+					var sponsorName = window.external.Get( "sponsorName" );
+					if ( sponsorName == "" ) {
+						sponsorName = "our sponsor";
+					}
+					document.getElementById( "providedByText" ).innerHTML = "This Free Game Session was provided by " + sponsorName + ".";
+					break;
+				}
+				default:
+				{
+					document.getElementById( "providedByText" ).innerHTML = "This Game Session was provided using WildCoins!";
+					break;
+				}
+			}
+			document.getElementById( "providedByText" ).innerHTML = document.getElementById( "providedByText" ).innerHTML + "</br />Enjoy 100's of Popular New Games<br /><a href=\"javascript:NavigateHowItWorks()\">Learn more about WildCoins</a>";
+			document.getElementById( "gameText" ).innerHTML = "We hope you enjoyed " + gameName;
+			
+			if ( !_isPurchaseable ) {
+				HideDiv( "buyButton" );
+			}
+		}
+		
+		function NavigateHowItWorks()
+		{
+			window.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/HowItWorks.aspx";
+		}
+		
+		function NavigateBuyNow()
+		{
+			window.location = "going_online.html?url=http://www.wildgames.com/ecs/htdocs/wire/Cart.aspx&buyGame=1";
+		}
+		
+	</script>
+</head>
+
+<body scroll="no" leftmargin="0" topmargin="0" onload="Initialize();" ondragover="CancelEvent()">
+
+	<!--- header --->
+	<table width="965" border="0" cellpadding="0" cellspacing="0" background="local_assets/img/wire2_header_right.jpg" id="Table1">
+		<tr>
+			<td><a href="start.html"><img src="local_assets/img/WIRE_brand.jpg" border="0" /></a></td>
+		</tr>
+	</table>		
+	
+	<!--- content --->
+	<table width="965" height="498" border="0" cellpadding="20" cellspacing="0" background="local_assets/img/wire2_content_bg.jpg" id="Table2">
+		<tr>
+			<td valign="top"></td>
+		</tr>
+	</table>
+	
+	<!--- feedback --->
+	<div id="feedback" style="position:absolute;left:240px;top:200px;width:500px;font-family:arial;font-size:12px;color:#A90000;z-index:2;" align="center"></div>
+	
+
+	<!--- center --->
+	<div id="center" style="position:absolute;top:160px;left:0px;width:965px;z-index:2;" align="center">
+		<span class="contentXXLarge">Thanks for playing!</span><br /><br />
+		<div id="providedByText" class="contentLargeSpaced"></div><br /><br />
+		<div id="gameText" class="contentLarge"></div><br />
+		<div id="buyButton"><img src="local_assets/img/button_lg_buy_now.gif" style="cursor:hand;" border="0" alt="" onclick="NavigateBuyNow()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /></div><br /><br />
+		<table width="890" cellpadding="0" cellspacing="0" border="0" id="Table3">
+			<tr>
+				<td width="50%" align="left"><img src="local_assets/img/button_replay.gif" style="cursor:hand;" border="0" alt="" onclick="window.external.NavigateLocal( 'start.html' )" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /></td>
+				<td width="50%" align="right"><img src="local_assets/img/button_exit.gif" style="cursor:hand;" border="0" alt="" onclick="window.external.ExitProcess()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /></td>
+			</tr>
+		</table>
+	</div>
+	
+	<!--- footer --->
+	<div id="bottom_bar"><img src="local_assets/img/wire2_footer.jpg" usemap="#wire_footer" border="0" /></div>
+	
+</body>
+
+<!--- image maps --->
+<map name="wire_footer">
+	<area shape="rect" coords="33,6,116,21" title="Terms of Use" href="javascript:OpenRedirector('termsofuse.aspx')">
+	<area shape="rect" coords="137,6,173,21" title="Help" href="offline_help.html" target="_top">
+	<area shape="rect" coords="195,6,393,21" title="EULA" href="javascript:OpenRedirector('eula.aspx')">
+</map>
+
+</html>

@@ -1,0 +1,169 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 strict//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title id="title">Error</title>	
+	<link rel="stylesheet" type="text/css" href="local_assets/css/wire.css">
+	
+	<!-- javascript library files -->
+	<script language="javascript" src="local_assets/js/queryString.js"></script>
+	<script language="javascript" src="local_assets/js/div.js"></script>
+	
+	<!-- application javascript -->
+	<script language="javascript" src="local_assets/js/main.js"></script>
+	
+	<script language="javascript">
+				
+		function Initialize()
+		{
+			window.onClose = function(){ window.external.ExitProcess() };
+			
+			ResolutionCheck();
+			
+			var urlParams = ReadURLParams();
+			
+			switch( urlParams.errorcode )
+			{
+				case "outoftrialsession":
+				{	document.getElementById( "feedback" ).innerHTML = "There was an error.<br /><br />You are out of trial sessions."
+					break;
+				}
+				case "outoftrialtime":
+				{
+					document.getElementById( "feedback" ).innerHTML = "There was an error.<br /><br />You are out of trial time."
+					break;
+				}
+				case "outofofflinecoins":
+				{
+					document.getElementById( "feedback" ).innerHTML = "There was an error.<br /><br />You are out of offline WildCoins."
+					break;
+				}
+				case "invalidlicense":
+				{
+					document.getElementById( "feedback" ).innerHTML = "There was an error.<br /><br />There was a problem with your license."
+					break;
+				}
+				case "startgamefailed":
+				{
+					document.getElementById( "feedback" ).innerHTML = "There was an error.<br /><br />The game could not be started."
+					break;
+				}						
+				case "WIRE_notonline":
+				{
+					HideDiv( "error_general" );
+					ShowDiv( "error_offline" );
+					document.getElementById( "offlineFeedback" ).innerHTML = "There was an error.<br /><br />The game could not be started."
+					break;
+				}
+				case "WIRE_offlineCoins":
+				{
+					HideDiv( "error_general" );
+					ShowDiv( "error_offline" );
+					document.getElementById( "offlineFeedback" ).innerHTML = "You do not have enough offline WildCoins to play."
+					break;
+				}
+				case "WIRE_trialError":
+				{
+					HideDiv( "error_general" );
+					ShowDiv( "error_offline" );
+					document.getElementById( "offlineFeedback" ).innerHTML = "There was an error.  Your trial session could not be launched."
+					break;
+				}
+				case "WIRE_sponsorError":
+				{
+					HideDiv( "error_general" );
+					ShowDiv( "error_offline" );
+					document.getElementById( "offlineFeedback" ).innerHTML = "There was an error.  Your sponsored session could not be launched."
+					break;
+				}
+				case "WIRE_sponsorErrorOffline":
+				{
+					HideDiv( "error_general" );
+					ShowDiv( "error_offline" );
+					document.getElementById( "offlineFeedback" ).innerHTML = "You must be online to play a sponsored session.<br /><br />Please go online, press the 'BACK' button, and try again."
+					break;
+				}
+				default:
+				{
+					document.getElementById( "feedback" ).innerHTML = "There was an error.<br /><br />The game could not be started."
+					break;
+				}
+			}
+		}
+		
+	</script>
+</head>
+
+<body scroll="no" leftmargin="0" topmargin="0" onload="Initialize();" ondragover="CancelEvent()">
+	<div id="header" style="top:0px;left:0px;z-index:3;width:965px;"><a href="start.html"><img src="local_assets/img/WIRE_brand.jpg" border="0" /></a><img src="local_assets/img/wire2_header_right.jpg" border="0" /></div>
+	
+	<div id="error_general" style="position:absolute;top:150px;left:20px;height:373px;width=925px;">
+		<table width="925" border="0" cellpadding="10" cellspacing="0" align="center" id="Table1">
+			<tr>
+				<td class="pageTitle" align="center">
+					<div id="feedback">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<a href="http://support.wildgames.com" target=_blank">Click here for additional support</a>
+					
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<img src="local_assets/img/button_try_again.gif" style="cursor:hand;" border="0" onclick="window.external.PlayGame();" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<img src="local_assets/img/button_exit.gif" style="cursor:hand;" border="0" onclick="window.external.ExitProcess();" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<img src="local_assets/img/button_back.gif" style="cursor:hand;" border="0" onclick="window.location='start.html';" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id="error_offline" style="position:absolute;top:150px;left:20px;height:373px;width=925px;visibility:hidden;">
+		<table width="925" border="0" cellpadding="10" cellspacing="0" align="center" id="Table3">
+			<tr>
+				<td class="pageTitle" align="center">
+					<div id="offlineFeedback">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<a href="http://support.wildgames.com" target=_blank">Click here for additional support</a>
+					
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<img src="local_assets/img/button_back.gif" style="cursor:hand;" border="0" onclick="window.location='start.html';" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<table width="965" height="498" border="0" cellpadding="0" cellspacing="0" background="local_assets/img/wire2_content_bg.jpg" style="padding-top: 15px;" id="Table2">
+		<tr>
+			<td valign="top">
+			
+			</td>
+		</tr>
+	</table>
+	
+	<div id="bottom_bar" style="position:absolute;top:622px;left:0px;z-index:2"><img src="local_assets/img/wire2_footer.jpg" usemap="#wire_footer" border="0" /></div>
+</body>
+
+<!--- image maps --->
+<map name="wire_footer">
+	<area shape="rect" coords="33,6,116,21" title="Terms of Use" href="javascript:OpenRedirector('termsofuse.aspx')">
+	<area shape="rect" coords="137,6,173,21" title="Help" href="offline_help.html" target="_top">
+	<area shape="rect" coords="195,6,393,21" title="EULA" href="javascript:OpenRedirector('eula.aspx')">
+</map>
+
+</html>

@@ -1,0 +1,164 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 strict//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title id="title">going_online</title>	
+	<link rel="stylesheet" type="text/css" href="local_assets/css/wire.css">
+	
+	<!-- javascript library files -->
+	<script language="javascript" src="local_assets/js/div.js"></script>
+	<script language="javascript" src="local_assets/js/queryString.js"></script>
+	
+	<!-- application javascript -->
+	<script language="javascript" src="local_assets/js/main.js"></script>
+	
+	<script language="javascript">
+		
+		var urlParams = ReadURLParams();
+		var timeout = true;
+		var userParams = "";
+		
+		if ( window.external.GetUMS != "" ) {
+			userParams = "&guid=" + window.external.GetUMS + "&uak=" + window.external.GetUAK + "&sy=true";
+		} else {
+			userParams = "&sy=true";
+		}
+		
+		function Initialize()
+		{
+			window.onClose = function(){ window.external.ExitProcess() };
+			
+			ResolutionCheck();
+			
+			document.getElementById( "configFrame" ).src = "http://wire2.wildgames.com/online_test.html";
+			
+			if ( window.external.IsOnline ) {
+				setTimeout( "DisplayFirewallMsg()", 5000);
+			}
+			else {
+				ShowDiv( "offline_warning" );
+				HideDiv( "goingOnline" );
+				if ( urlParams.buyGame != null ) {
+					SetupBuyGameLink();
+				}
+			}
+		}
+		
+		function CommunicationSuccessful()
+		{
+			timeout = false;
+			Continue();
+		}
+		
+		function Continue()
+		{
+			var targetUrl = urlParams.url + "?dp=" + window.external.GetDPCodeName + "&itemName=" + window.external.GetProductCodeName + userParams + "&version=" + _version;
+		
+			if ( urlParams.nextUrl != null ) {
+				targetUrl += "&nextUrl=" + urlParams.nextUrl + "&nextUrlType=" + urlParams.nextUrlType;
+			}
+			if ( urlParams.backUrl != null ) {
+				targetUrl += "&backUrl=" + urlParams.backUrl + "&backUrlType=" + urlParams.backUrlType;
+			}
+
+			setTimeout( "window.location = \"" + targetUrl + "\";", 200 );
+		}
+		
+		function DisplayFirewallMsg()
+		{
+			if ( timeout ) {
+				if ( urlParams.alt != null ) {
+					if ( urlParams.alt != "end.html" ) { 
+						window.location = urlParams.alt;
+					}
+					else {
+						window.location = urlParams.alt + "?end=1";
+					}
+				}
+				if ( urlParams.sponsorOnlineError != null )
+				{
+					window.location = "error.html?errorcode=WIRE_sponsorErrorOffline";
+				}
+				else {
+					HideDiv( "goingOnline" );
+					ShowDiv( "firewall_warning" );
+				}
+				if ( urlParams.buyGame != null ) {
+					SetupBuyGameLink();
+				}
+			}
+		}
+		
+		function SetupBuyGameLink()
+		{
+			document.getElementById( "buyDiv" ).innerHTML = "<a href=\"http://www.wildgames.com/ECS/htdocs/GameInfo.aspx?dp=" + window.external.GetDPCodeName + "&itemname=" + window.external.GetProductCodeName + "\" target=\"_blank\" class=\"contentHref\">Click here</a> to purchase this game in your browser.";
+			ShowDiv( "buyDiv" );
+		}
+		
+		function Retry()
+		{
+			var tempLocation = unescape( window.location );
+			setTimeout( "window.location = \"" + tempLocation + "\";", 50 );
+		}
+		
+	</script>
+</head>
+
+<body scroll="no" leftmargin="0" topmargin="0" onload="Initialize();" ondragover="CancelEvent()">
+
+	<div id="goingOnline" style="position:absolute;left:408px;top:290px;z-index:2;"><img src="local_assets/img/going_online_icon.gif" alt="" /></div>
+	
+	<!--- firewall warning --->
+	<div id="feedback" style="position:absolute;top:220px;left:103px;z-index:3;visibility:hidden;display:none;font-size:12px;color:#A90000;" align="center"></div>
+	
+	<!--- buy link --->
+	<div id="buyDiv" style="position:absolute;top:445px;left:0px;width:965px;z-index:3;visibility:hidden;display:none;font-size:14px;font-weight:bold;" align="center"></div>
+	
+	<!--- firewall warning --->
+	<div id="firewall_warning" style="position:absolute;top:270px;left:103px;z-index:3;visibility:hidden;display:none;" align="center">
+		<a href="offline_help.html" target="_top"><img src="local_assets/img/firewall_warning.gif" border="0" /></a><br /><br />
+		<img src="local_assets/img/button_retry.gif" style="cursor:hand;" border="0" alt="" onclick="Retry()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+	</div>
+	
+	<div id="offline_warning" style="position:absolute;top:270px;left:103px;z-index:3;visibility:hidden;display:none;" align="center">
+		<a href="offline_help.html" target="_top"><img src="local_assets/img/offline_warning.gif" border="0" /></a><br /><br />
+		<img src="local_assets/img/button_retry.gif" style="cursor:hand;" border="0" alt="" onclick="Retry()" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+	</div>
+	
+	<!--- header --->
+	<table width="965" border="0" cellpadding="0" cellspacing="0" background="local_assets/img/wire2_header_right.jpg" id="Table1">
+		<tr>
+			<td><a href="offline_help.html" target="_top"><img src="local_assets/img/WIRE_brand.jpg" border="0" /></a><img src="local_assets/img/wire2_header_right.jpg" border="0" /></td>
+		</tr>
+	</table>		
+	
+	<!--- content --->
+	<table width="965" height="498" border="0" cellpadding="20" cellspacing="0" background="local_assets/img/wire2_content_bg.jpg" id="Table2">
+		<tr>
+			<td valign="top">
+			</td>
+		</tr>
+	</table>
+	
+	<!--- back button --->
+	<div id="back_button" style="position:absolute;top:548px;left:36px;width:434px;height:214px;z-index:2;">
+		<img src="local_assets/img/button_back.gif" style="cursor:hand;" border="0" alt="" onclick="window.location = 'start.html'" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+	</div>
+
+	<!--- footer --->
+	<div id="bottom_bar"><img src="local_assets/img/wire2_footer.jpg" usemap="#wire_footer" border="0" /></div>
+	
+	<!--- online detection --->
+	<div id="config_banner" style="position:absolute;top:0px;left:0px;z-index:0;visibility:hidden;"><iframe id="configFrame" name="configFrame" src="" width="1" height="1" frameborder="0" scrolling="no"></iframe></div>
+
+</body>
+
+
+
+<!--- image maps --->
+<map name="wire_footer">
+	<area shape="rect" coords="33,6,116,21" title="Terms of Use" href="javascript:OpenRedirector('termsofuse.aspx')">
+	<area shape="rect" coords="137,6,173,21" title="Help" href="offline_help.html" target="_top">
+	<area shape="rect" coords="195,6,393,21" title="EULA" href="javascript:OpenRedirector('eula.aspx')">
+</map>
+
+</html>

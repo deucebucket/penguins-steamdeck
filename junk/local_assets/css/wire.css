@@ -1,0 +1,305 @@
+body 
+{
+	font-size: 11px;
+	font-family: Arial;
+	margin: 0;
+	background-color: #2D4DA5;
+}
+
+/* content */
+.content
+{
+	font-size: 12px;
+	font-family: arial;
+}
+
+.contentLarge
+{
+	font-size: 14px;
+	font-family: arial;
+	font-weight: bold;
+}
+
+.contentLargeSpaced
+{
+	font-size: 14px;
+	font-family: arial;
+	font-weight: bold;
+	line-height: 22px;
+}
+
+.contentXLarge
+{
+	font-size: 18px;
+	font-family: arial;
+	font-weight: bold;
+}
+
+.contentXXLarge
+{
+	font-size: 24px;
+	font-family: arial;
+	font-weight: bold;
+}
+
+.contentXXXLarge
+{
+	font-size: 30px;
+	font-family: arial;
+	font-weight: bold;
+}
+
+.contentSmall
+{
+	font-size: 11px;
+	font-family: arial;
+}
+
+.contentTiny
+{
+	font-size: 10px;
+	font-family: arial;
+}
+
+a.contentHref
+{
+	color: #00209F;
+	font-family: arial;
+}
+
+a.contentHref:hover
+{
+	color: #0173F3;
+	text-decoration: none;
+}
+
+.formInputText
+{
+	border: 1px solid #00209F;
+	background-color: #FFF;
+	padding: 2px;
+}
+
+.formInputTextFocus
+{
+	border-left: 1px solid #666;
+	border-top: 1px solid #666;
+	border-right: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+	background-color: #FBF1AD;
+	padding: 2px;
+}
+
+.formInputText
+{
+	border: 1px solid #00209F;
+	background-color: #FFF;
+	padding: 2px;
+}
+
+#content_right
+{
+	position: absolute;
+	top: 124px;
+	left: 500px;
+	width: 492px;	
+}
+
+#content_right_iframe
+{
+	background-image: url(local_assets/img/wire2_content_right_bg.gif);
+	width:250px;
+	height:288px;
+}
+
+.cartText {
+	font-size: 12px;
+	font-family: arial;
+}
+
+
+.feedback {
+	font-size: 11px;
+	font-weight: bold;
+	font-family: arial;
+	color: 006600;
+}
+
+a.contentHref
+{
+	color: #00209F;
+	font-family: arial;
+}
+
+a.contentHref:hover
+{
+	color: #0173F3;
+	text-decoration: none;
+}
+
+.formInputText
+{
+	border: 1px solid #00209F;
+	background-color: #FFF;
+	padding: 2px;
+}
+
+.formInputTextFocus
+{
+	border-left: 1px solid #666;
+	border-top: 1px solid #666;
+	border-right: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+	background-color: #FBF1AD;
+	padding: 2px;
+}
+
+.formText
+{
+	font-size: 11px;
+	font-family: arial;
+}
+
+.formTextLarge
+{
+	font-size: 12px;
+	font-family: arial;
+}
+
+.formTextSub
+{
+	font-size:	10px;
+	font-family: arial;
+}
+
+.fieldLabel 
+{
+	font-weight: normal;
+	font-size: 11px;
+	font-family: arial;
+}
+
+.italic
+{
+	font-style: italic;
+}
+
+.pageTitle {
+	font-size: 14px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.pageTitleLarge {
+	font-size: 16px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.sectionTitleAltColor
+{
+	color: #FF5F00;
+	font-size: 14px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.sectionTitleAltColorLarge
+{
+	color: #FF5F00;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.sectionTitle
+{
+	font-size: 14px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.sectionTitleColor
+{
+	color: #00209F;
+	font-size: 14px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.sectionTitleColorLarge
+{
+	color: #00209F;
+	font-size: 16px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.sectionTitleColorXLarge
+{
+	color: #00209F;
+	font-size: 20px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.smallerText
+{
+	font-size: smaller;
+	font-weight: lighter;
+}
+
+.subTitle {
+	font-size: 12px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.toolTip
+{
+	color: White;
+	font-size: 11px;
+	font-family: arial;
+}
+
+.toolTipTitle
+{
+	color: White;
+	font-size: 14px;
+	font-weight: bold;
+	font-family: arial;
+}
+
+.welcomeText 
+{
+	color: White;
+	font-size: 16px;
+	font-family: arial;
+}
+
+.welcomeLink
+{
+	color: White;
+	font-size: 14px;
+	font-family: arial;
+}
+
+a.welcomeLink:hover
+{
+	color: White;
+	font-size: 14px;
+	font-family: arial;
+	text-decoration: none;
+}
+
+.welcomeTextSm
+{
+	color: White;
+	font-size: 14px;
+	font-family: arial;
+}
+
+.white
+{
+	color: White;
+}

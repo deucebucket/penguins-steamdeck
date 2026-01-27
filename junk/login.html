@@ -1,0 +1,131 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 strict//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title id="title">start_login_register</title>	
+	<link rel="stylesheet" type="text/css" href="local_assets/css/wire.css">
+	
+	<!-- javascript library files -->
+	<script language="javascript" src="local_assets/js/queryString.js"></script>
+	
+	<!-- application javascript -->
+	<script language="javascript" src="local_assets/js/main.js"></script>
+	
+	<script language="javascript">
+				
+		function Initialize()
+		{
+			window.onClose = function(){ window.external.ExitProcess() };
+			
+			ResolutionCheck();
+			
+			//give focus to input
+			document.getElementById("login_email").focus();
+		}
+		
+		function Login()
+		{
+			if ( window.external.IsOnline ) {
+				window.external.SubmitLogin( document.getElementById( "login_email" ).value, document.getElementById( "login_password" ).value, document.getElementById( "login_remember" ).checked, "LoginComplete");
+			}
+			else {
+				window.external.OfflineLogin( document.getElementById( "login_email" ).value, document.getElementById( "login_password" ).value, document.getElementById( "login_remember" ).checked);
+				if ( window.external.IsLoggedIn ) {
+					window.location= "start.html";
+				}
+				else {
+					document.getElementById( "feedback" ).innerHTML = "The e-mail address and password you entered did not match our records.  If you believe you have reached this message in error, please go online and try again.";
+				}
+			}
+		}
+			
+		function LoginComplete( errorType, errorCode, errorMsg )
+		{
+			if ( errorType == "success" ) {
+				window.location= "start.html";
+			}
+			else {	
+				if ( errorType == "http" ) {
+					document.getElementById( "feedback" ).innerHTML = "We could not process your login.<br />Please try again later.";
+				}
+				else if ( errorType == "client" ) {
+					document.getElementById( "feedback" ).innerHTML = "We could not process your login.<br />Please try again later.";
+				}
+				else if ( errorType == "server" ) {
+					if (errorCode.indexOf("client.req_invalid.invalid_credentials") != -1) {
+						document.getElementById( "feedback" ).innerHTML = "The e-mail address and password you entered did not match.  Please try again.";
+					} else {
+						document.getElementById( "feedback" ).innerHTML = "We could not process your login.<br />Please try again later.";
+					}
+				}
+			}
+		}
+	</script>
+</head>
+
+<!--- floating text --->
+<div id="feedback" style="position: absolute; left: 445px; top: 172px; width:235px; font-size:11px; color:#A90000;z-index:3;"></div>
+
+<body scroll="no" leftmargin="0" topmargin="0" onload="Initialize();" ondragover="CancelEvent()">
+	<div id="header" style="top:0px;left:0px;z-index:3;width:965px;"><a href="start.html"><img src="local_assets/img/WIRE_brand.jpg" border="0" /></a><img src="local_assets/img/wire2_header_right.jpg" border="0" /></div>
+	
+	<!--- content --->
+	<table width="965" height="498" border="0" cellpadding="20" cellspacing="0" background="local_assets/img/wire2_content_bg.jpg" id="Table2">
+		<tr>
+			<td valign="top"></td>
+		</tr>
+	</table>
+	
+	<!--- existing customers --->
+	<div id="login" style="position:absolute;top:160px;left:150px;width:265px;height:320px;z-index:2;">
+		<table width="100%" cellpadding="2" cellspacing="0" border="0" class="content" id="Table1">
+			<tr>
+				<td colspan="2">
+					<span class="sectionTitleColor">Existing Customers</span><br />
+					Log in to continue.<br /><br />
+				</td>
+			</tr>
+			<tr>
+				<td class="formText" valign="top" width="60" align="right">E-Mail<br />Address:</td>
+				<td width="100%">
+					<input id="login_email" name="login_email" type="text" size="20" class="formInputText" onfocus="this.className = 'formInputTextFocus';this.select();" onblur="this.className = 'formInputText';" tabindex="1" /><br />
+					<span class="formTextSub">Ex: name@domain.com</span><br /><br />
+				</td>
+			</tr>
+			<tr>
+				<td class="formText" valign="top" align="right">Password:</td>
+				<td>
+					<input id="login_password" name="login_password" type="password" size="20" class="formInputText" onfocus="this.className = 'formInputTextFocus';this.select();" onblur="this.className = 'formInputText';" tabindex="2" /><br />
+					<span class="formTextSub">must be at least 6 characters</span><br />
+				</td>
+			</tr>
+			<tr>
+				<td class="formText" valign="top" align="right">&nbsp;</td>
+				<td>
+					<input type="checkbox" name="login_remember" id="login_remember" /><span class="formText">Remember me</span><br />
+				</td>
+			</tr>
+			<tr>
+				<td class="formText" valign="top" align="right"></td>
+				<td>
+					<br /><img src="local_assets/img/button_login.gif" style="cursor:hand;" type="image" name="login" id="login_submit" value="Login" onclick="Login();" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /><br />
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+		<!--- Buttons --->
+	<div id="back_button" style="position:absolute;top:548px;left:36px;width:434px;height:214px;z-index:2;">
+		<img src="local_assets/img/button_back.gif" style="cursor:hand;" border="0" alt="" onclick="window.location = 'start.html'" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+	</div>
+
+	<div id="bottom_bar" style="position:absolute;top:622px;left:0px;z-index:2"><img src="local_assets/img/wire2_footer.jpg" usemap="#wire_footer" border="0" /></div>
+</body>
+
+<!--- image maps --->
+<map name="wire_footer">
+	<area shape="rect" coords="33,6,116,21" title="Terms of Use" href="javascript:OpenRedirector('termsofuse.aspx')">
+	<area shape="rect" coords="137,6,173,21" title="Help" href="offline_help.html" target="_top">
+	<area shape="rect" coords="195,6,393,21" title="EULA" href="javascript:OpenRedirector('eula.aspx')">
+</map>
+
+</html>

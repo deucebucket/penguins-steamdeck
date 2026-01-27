@@ -1,0 +1,40 @@
+<html>
+	<head>
+	<title>Penguins!</title>
+	<HTA:APPLICATION 
+	     ID="oHTA"
+	     APPLICATIONNAME="Penguins!WebURL"
+	     SCROLL="no"
+	     SINGLEINSTANCE="no"
+	     CAPTION="yes"
+	     ICON = "Penguins.ico"
+	     SCROLL="yes"
+	     MAXIMIZEBUTTON = "yes"
+	     MINIMIZEBUTTON = "yes"
+	>
+	<script>
+		
+		if( document.all )
+			window.resizeTo( 550, 670 );	
+		function ResizeOccured()
+		{			
+			document.all.innerFrame.style.width=document.body.clientWidth;
+			document.all.innerFrame.style.height=document.body.clientHeight;
+			document.all.innerFrame.width = document.body.clientWidth;
+			document.all.innerFrame.height = document.body.clientHeight;			
+		}
+		window.onresize = ResizeOccured;
+	</script>	
+	</head>	  
+	<body bgcolor=black TOPMARGIN=0 LEFTMARGIN=0 >	
+		
+		<script>
+			var pathIs = new String( oHTA.commandLine );
+			pathIs = pathIs.substr( oHTA.commandLine.indexOf( "http" ) );
+		
+			document.write( "<iframe src='" + pathIs + "' scrolling='auto' frameborder=0 APPLICATION='yes' MARGINWIDTH=10 MARGINHEIGHT=10 name='innerFrame'>");
+			ResizeOccured();
+		</script>
+		
+	</body>
+</html>

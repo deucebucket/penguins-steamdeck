@@ -1,0 +1,125 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 strict//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title id="title">unlock</title>	
+	<link rel="stylesheet" type="text/css" href="local_assets/css/wire.css">
+	
+	<!-- javascript library files -->
+	<script language="javascript" src="local_assets/js/queryString.js"></script>
+	
+	<!-- application javascript -->
+	<script language="javascript" src="local_assets/js/main.js"></script>
+	
+	<script language="javascript">
+				
+		function Initialize()
+		{
+			window.onClose = function(){ window.external.ExitProcess() };
+			
+			ResolutionCheck();
+			
+			document.getElementById( "unlock" ).focus();
+		}
+		
+		function UnlockGame()
+		{
+		
+			document.getElementById( "feedback" ).innerHTML = "";
+			
+			if ( window.external.IsOnline ) {
+				window.external.SubmitUnlockCode( document.getElementById( "unlock" ).value, "UnlockGameComplete" );
+			}
+			else {
+				document.getElementById( "feedback" ).innerHTML = "You must be online to unlock a game.  Please go online and try again.";
+			}
+		}
+			
+		function UnlockGameComplete( errorType, errorCode, errorMsg )
+		{
+			if ( errorType == "success" ) {
+				window.external.PlayGame();
+			}
+			else { // there was an error with the unlock request
+				if ( errorType == "http" ) {
+					document.getElementById( "feedback" ).innerHTML = "We could not process your unlock request.  Please try again.";
+				}
+				else if ( errorType == "client" ) {
+					document.getElementById( "feedback" ).innerHTML = "We could not process your unlock request.  Please try again.";
+				}
+				else if ( errorType == "server" ) {
+					if (errorCode.indexOf("client.req_invalid.invalid_grantkey") != -1) {
+						document.getElementById( "feedback" ).innerHTML = "The unlock code you provided is invalid.  Please try again.";
+					} else {
+						document.getElementById( "feedback" ).innerHTML = "We could not process your unlock request.  Please try again.";
+					}
+				}
+			}
+		}
+		
+		function CheckSubmission()
+		{
+			if ( window.event.keyCode == 13 ) {
+				UnlockGame();
+			} 
+		}
+		
+	</script>
+</head>
+
+<!--- floating text --->
+<body scroll="no" leftmargin="0" topmargin="0" onload="Initialize();" ondragover="CancelEvent()" onkeydown="CheckSubmission()">
+	<div id="header" style="top:0px;left:0px;z-index:3;width:965px;"><a href="start.html"><img src="local_assets/img/WIRE_brand.jpg" border="0" /></a><img src="local_assets/img/wire2_header_right.jpg" border="0" /></div>
+	
+	<table width="965" height="498" border="0" cellpadding="0" cellspacing="0" background="local_assets/img/wire2_content_bg.jpg" style="padding-top: 15px;" id="Table2">
+		<tr>
+			<td valign="top">
+				<div id="content_center" style="height: 373px;">
+					<table width="100%" height="200" border="0" cellpadding="0" cellspacing="0" align="center" id="Table1">
+						<tr>
+							<td class="pageTitle" align="center"><img src="local_assets/img/spacer.gif" height="1" width="200" /></td>
+						</tr>
+						<tr>
+							<td width="50%" valign="top">
+								<table width="100%" id="unlockTable">
+									<tr>
+										<td width="100%" colspan="2" align="center" class="pageTitle"><img src="local_assets/img/spacer.gif" height="45" width="1" /></td>
+									</tr>
+									<tr>
+										<td width="100%" colspan="2" align="center" class="pageTitle">Unlock Your Game<br /><br /><span class="content">After you receive your unlock code, copy &amp; paste or type in your <br />Unlock Code into the box below, then click "Unlock Game".</span><br /><br /><span class="content" style="font-weight:normal;">(Example: 1234-5678-9ABC)</span></td>
+									</tr>
+									<tr>
+										<td width="100%" colspan="2" align="ceter">&nbsp;<div id="feedback" style="font-size:12px; color:#A90000;z-index:3;" align="center">&nbsp;</div><br /></td>
+									</tr>
+									<tr>
+										<td width="100%" align="center"><input type="text" size="25" maxlength="14" name="unlock" id="unlock" class="formInputText" onfocus="this.className = 'formInputTextFocus';" onblur="this.className = 'formInputText';" /></td>
+									</tr>
+									<tr>
+										<td width="100%" colspan="2" align="center">&nbsp;<div id="Div1" style="font-size:12px; color:#A90000;z-index:3;"></div></td>
+									</tr>
+									<tr>
+										<td width="100%" align="center" class="pageTitle" valign="absmiddle"><img src="local_assets/img/button_unlock.gif" style="cursor:hand;" type="image" name="unlock" id="unlock" value="unlock" onclick="UnlockGame();" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" /></a></td>
+									</tr>
+								</table>
+								<img src="local_assets/img/spacer.gif" height="100" width="1" />
+							</td>
+						</tr>
+						<tr>
+							<td><br /><img src="local_assets/img/spacer.gif" width="30" /><img src="local_assets/img/button_back.gif" type="image" name="back" id="back" value="Back" onclick="window.location= 'start.html';" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" style="cursor:hand;" /></td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
+	
+	<div id="bottom_bar" style="position:absolute;top:622px;left:0px;z-index:2"><img src="local_assets/img/wire2_footer.jpg" usemap="#wire_footer" border="0" /></div>
+</body>
+
+<!--- image maps --->
+<map name="wire_footer">
+	<area shape="rect" coords="33,6,116,21" title="Terms of Use" href="javascript:OpenRedirector('termsofuse.aspx')">
+	<area shape="rect" coords="137,6,173,21" title="Help" href="offline_help.html" target="_top">
+	<area shape="rect" coords="195,6,393,21" title="EULA" href="javascript:OpenRedirector('eula.aspx')">
+</map>
+
+</html>

@@ -1,0 +1,67 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 strict//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title id="title">Offline Help</title>	
+	<link rel="stylesheet" type="text/css" href="local_assets/css/wire.css">
+	
+	<!-- application javascript -->
+	<script language="javascript" src="local_assets/js/main.js"></script>
+	
+	<script language="javascript">
+				
+		function Initialize()
+		{
+			window.onClose = function(){ window.external.ExitProcess() };
+			
+			ResolutionCheck();
+		}
+		
+	</script>
+</head>
+
+<body scroll="no" leftmargin="0" topmargin="0" onload="Initialize();" ondragover="CancelEvent()">
+	<div id="header" style="top:0px;left:0px;z-index:3;width:965px;"><a href="start.html"><img src="local_assets/img/WIRE_brand.jpg" border="0" /></a><img src="local_assets/img/wire2_header_right.jpg" border="0" /></div>
+	
+	<div id="error_offline" style="position:absolute;top:150px;left:20px;height:373px;width=925px;">
+		<table width="925" border="0" cellpadding="10" cellspacing="0" align="center" id="Table3">
+			<tr>
+				<td class="pageTitle" align="center">
+					<div id="offlineFeedback">&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" class="content">
+					<span style="font-size:14px;font-weight:bold;">Need assistance?</span><br /><br />
+
+					Please visit us online at <a href="http://support.wildgames.com" target=_blank">http://support.wildgames.com</a> for the latest information and updates to any questions you may have.<br /><br />
+
+					Thank you<br /><br />
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<img src="local_assets/img/button_back.gif" style="cursor:hand;" border="0" onclick="window.location='start.html';" onmouseover="this.src=this.src.replace('_d.gif', '.gif');this.src=this.src.replace('.gif', '_o.gif');" onmouseout="this.src=this.src.replace('_o.gif', '.gif');" onmouseup="this.src=this.src.replace('_d.gif', '_o.gif');" onmousedown="this.src=this.src.replace('_o.gif', '_d.gif');" />
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<table width="965" height="498" border="0" cellpadding="0" cellspacing="0" background="local_assets/img/wire2_content_bg.jpg" style="padding-top: 15px;" id="Table2">
+		<tr>
+			<td valign="top">
+			
+			</td>
+		</tr>
+	</table>
+	
+	<div id="bottom_bar" style="position:absolute;top:622px;left:0px;z-index:2"><img src="local_assets/img/wire2_footer.jpg" usemap="#wire_footer" border="0" /></div>
+</body>
+
+<!--- image maps --->
+<map name="wire_footer">
+	<area shape="rect" coords="33,6,116,21" title="Terms of Use" href="javascript:OpenRedirector('termsofuse.aspx')">
+	<area shape="rect" coords="137,6,173,21" title="Help" href="offline_help.html" target="_top">
+	<area shape="rect" coords="195,6,393,21" title="EULA" href="javascript:OpenRedirector('eula.aspx')">
+</map>
+
+</html>
