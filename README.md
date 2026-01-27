@@ -17,11 +17,17 @@ The game launches and gameplay works! **For best experience, run in Game Mode** 
 
 ## Screenshots
 
-### Installer
+### Installer (v2.2)
 ![Installer](screenshots/installer.png)
 
-### Main Menu
-![Main Menu](screenshots/02_main_menu_loaded.png)
+### Zoo Map - Level Progress
+![Zoo Map](screenshots/zoo_map_progress.jpg)
+
+### Level Preview - The Big Bang
+![The Big Bang](screenshots/level_the_big_bang.jpg)
+
+### Level Preview - Over The Hill (Crash Point)
+![Over The Hill](screenshots/level_over_the_hill_crash.jpg)
 
 ### Gameplay
 ![Gameplay](screenshots/11_gameplay_focused.png)
@@ -58,16 +64,18 @@ The game launches and gameplay works! **For best experience, run in Game Mode** 
 
 ## What Works
 
-- ✅ One-click installer with Steam integration
-- ✅ Game launches (DRM bypassed)
+- ✅ One-click installer with ASCII penguin banner
+- ✅ Automatic Steam integration (shortcut + artwork)
+- ✅ Game launches (3 DRM patches applied)
 - ✅ Main menu, profiles, options
-- ✅ Level selection and gameplay
+- ✅ Level 1 "Over The Hill" completable
+- ✅ Zoo map navigation
 - ✅ Sound/Music
-- ✅ 800x600 resolution (scaled by gamescope)
+- ✅ 800x600 resolution (VM + game matched)
 - ✅ Mouse works correctly in Game Mode
-- ✅ Touch screen support
-- ✅ Steam artwork (grid, hero, logo)
-- ✅ 8+ minutes stable gameplay tested
+- ✅ Touch screen + trackpad support
+- ✅ Steam artwork auto-generated (grid, hero, logo)
+- ✅ Crash logging to `logs/` folder
 
 ---
 
