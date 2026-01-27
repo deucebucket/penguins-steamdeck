@@ -77,8 +77,19 @@ The game launches and gameplay works! **For best experience, run in Game Mode** 
 |-------|----------|------------|
 | **Black screen on startup** | EXPECTED | Wait 30-60 seconds for WildTangent logo |
 | **Mouse offset in Desktop Mode** | HIGH | Run in Game Mode instead |
-| **Level completion crash** | MEDIUM | Save progress frequently |
+| **Level transition crash** | MEDIUM | See details below |
 | **Username input** | LOW | Use default profile |
+
+### Level Transition Crash
+
+**Trigger:** Clicking "Play" after completing Level 1 ("Over the Hill") crashes the game.
+
+**Technical Details:**
+- Null pointer dereference in XUL (Mozilla browser engine)
+- Address: `0x10100a31` in `xul.dll`
+- The game uses an embedded Gecko/XULRunner browser for UI transitions
+
+**Workaround:** None currently - investigating. The crash occurs in WildTangent's proprietary game shell, not Wine/Proton.
 
 ---
 
