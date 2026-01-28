@@ -1,5 +1,30 @@
 # Changelog - Penguins! Steam Deck Port
 
+## [2.6.0] - 2026-01-28 - NEW SINGLE-WINDOW MANAGER + PROFILE EDITOR
+
+### Added
+- **PenguinsManager.py** - Complete rewrite as single-window tkinter GUI
+  - Clean two-panel layout (800x480, fits Steam Deck perfectly)
+  - **Real profile creation** - Creates actual game profiles instantly
+  - **Profile editing** - Rename, Copy, Reset, Delete profiles
+  - Reads actual usernames from save files
+  - Visual profile cards with status indicators
+  - No more "pending" workarounds - profiles work immediately
+- Profile binary format reverse-engineered for username read/write
+
+### Changed
+- Replaced multi-dialog kdialog mess with single window
+- Profile slots now show actual in-game usernames
+- Dark theme with cyan accents
+- Credit "by deucebucket" added to manager
+
+### Technical
+- Username stored at pattern `05 04 00 <len> <name>` in profile.dat
+- Profiles created by copying default_profile.dat template
+- File permissions set to 755 to match game expectations
+
+---
+
 ## [2.5.0] - 2026-01-27 - GAME MANAGER + USER PROFILES
 
 ### Added
