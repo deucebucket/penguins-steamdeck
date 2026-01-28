@@ -1,8 +1,8 @@
 # Penguins! (2006 WildTangent) - Steam Deck Linux Port
 
-## Current Status: RELEASE v2.2 - Game Mode Recommended
+## Current Status: RELEASE v2.4 - FULLY PLAYABLE!
 
-The game launches and gameplay works! **For best experience, run in Game Mode** where gamescope handles resolution scaling and mouse coordinates correctly.
+**Level transition crash FIXED!** The game now works completely - all levels playable without crashes!
 
 ---
 
@@ -38,9 +38,6 @@ curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/b
 ### Level Preview - The Big Bang
 ![The Big Bang](screenshots/level_the_big_bang.jpg)
 
-### Level Preview - Over The Hill (Crash Point)
-![Over The Hill](screenshots/level_over_the_hill_crash.jpg)
-
 ### Gameplay
 ![Gameplay](screenshots/11_gameplay_focused.png)
 
@@ -72,15 +69,25 @@ curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/b
 - **Drag** gadgets by holding and moving your finger
 - Touch input works alongside trackpad - use whichever feels natural
 
+### Steam Keyboard (Username Entry)
+
+To enter a username or any text in the game:
+
+1. **Press Steam + X** to open the on-screen keyboard
+2. Type your text
+3. **Press Enter** or **Steam + X** again to close
+
+**Note:** A default profile is included, so you can skip creating a new profile and just use the existing one.
+
 ---
 
 ## What Works
 
+- ✅ **ALL LEVELS PLAYABLE** - Level transition crash FIXED!
 - ✅ One-click installer with ASCII penguin banner
 - ✅ Automatic Steam integration (shortcut + artwork)
 - ✅ Game launches (3 DRM patches applied)
 - ✅ Main menu, profiles, options
-- ✅ Level 1 "Over The Hill" completable
 - ✅ Zoo map navigation
 - ✅ Sound/Music
 - ✅ 800x600 resolution (VM + game matched)
@@ -96,24 +103,25 @@ curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/b
 | Issue | Severity | Workaround |
 |-------|----------|------------|
 | **Black screen on startup** | EXPECTED | Wait 30-60 seconds for WildTangent logo |
-| **Mouse offset in Desktop Mode** | HIGH | Run in Game Mode instead |
-| **Level transition crash** | MEDIUM | See details below |
+| **Mouse offset in Desktop Mode** | MEDIUM | Run in Game Mode instead |
 | **Username input** | LOW | Use default profile |
-
-### Level Transition Crash
-
-**Trigger:** Clicking "Play" after completing Level 1 ("Over the Hill") crashes the game.
-
-**Technical Details:**
-- Null pointer dereference in XUL (Mozilla browser engine)
-- Address: `0x10100a31` in `xul.dll`
-- The game uses an embedded Gecko/XULRunner browser for UI transitions
-
-**Workaround:** None currently - investigating. The crash occurs in WildTangent's proprietary game shell, not Wine/Proton.
 
 ---
 
 ## Technical Details
+
+### The Level Transition Fix (v2.4)
+
+**Problem:** The game crashed when loading new levels after completing one.
+
+**Root Cause:** The WildTangent engine embeds Mozilla Gecko (XUL) for its UI. Wine's implementation of Gecko/mshtml has use-after-free bugs that crash when the game transitions between levels.
+
+**Solution:** Disable Gecko/mshtml entirely via Wine DLL overrides:
+```bash
+export WINEDLLOVERRIDES="d3d8=n;mshtml=;gecko="
+```
+
+The game doesn't actually need the web rendering components - disabling them prevents the crashes without affecting gameplay.
 
 ### DRM Bypass Patches
 
@@ -132,9 +140,9 @@ The WildTangent game validates its installation directory. Running from `Z:\home
 
 ### Requirements
 
-- Proton 5.0 (or compatible version)
+- Proton 5.0 (required - other versions don't work)
 - `PROTON_USE_WINED3D=1` environment variable
-- `d3d8=n` Wine DLL override (d3d8to9 wrapper)
+- `WINEDLLOVERRIDES="d3d8=n;mshtml=;gecko="` - d3d8 wrapper + Gecko disabled
 - Wine virtual desktop (800x600)
 - Game installed in Wine's `C:\Program Files (x86)\WildGames\Penguins!\`
 
@@ -142,12 +150,23 @@ The WildTangent game validates its installation directory. Running from `Z:\home
 
 ```bash
 export PROTON_USE_WINED3D=1
-export WINEDLLOVERRIDES="d3d8=n"
+export WINEDLLOVERRIDES="d3d8=n;mshtml=;gecko="
 export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.steam/steam"
 export STEAM_COMPAT_DATA_PATH="$GAME_DIR/prefix"
 
 "$PROTON" run 'C:\Program Files (x86)\WildGames\Penguins!\penguins.exe'
 ```
+
+### Proton Version Testing
+
+| Version | Result |
+|---------|--------|
+| **5.0** | **WORKS** - with Gecko disabled |
+| 5.13 | Game doesn't launch properly |
+| 6.3 | Game doesn't launch |
+| 7.0 | Crashes on startup |
+| 8.0/9.0 | Crashes or hangs on prefix upgrade |
+| Experimental | Bad file descriptor error |
 
 ---
 
@@ -167,7 +186,7 @@ Crash logs are saved to `logs/` directory. To report issues:
 Penguins/
 ├── install.sh              # One-click installer
 ├── Install-Penguins.desktop # Desktop shortcut for installer
-├── Penguins.sh             # Game launcher
+├── Penguins.sh             # Game launcher (v2.4 with crash fix)
 ├── Penguins.ico            # Game icon
 ├── penguins.exe            # Game executable (patched)
 ├── prefix_template/        # Pre-configured Wine prefix
@@ -179,6 +198,20 @@ Penguins/
 ---
 
 ## Changelog
+
+### v2.4 (January 27, 2026)
+- **FIXED: Level transition crash!** All levels now playable!
+- Root cause: Wine's Gecko/mshtml implementation has use-after-free bugs
+- Solution: Disable Gecko via `WINEDLLOVERRIDES="mshtml=;gecko="`
+- Game doesn't need web components - disabling has no side effects
+- Simplified launcher script (removed debug logging)
+
+### v2.3 (January 27, 2026)
+- Tested multiple Proton versions (5.0-9.0, Experimental)
+- Documented level transition crash as XUL engine bug
+- Added workaround: restart game between levels
+- Confirmed Proton 5.0 is only working version
+- Added ASCII loading screen to launcher
 
 ### v2.2 (January 26, 2026)
 - Added ASCII art penguin banner to installer
@@ -217,4 +250,4 @@ Penguins/
 
 ---
 
-*Status: Release v2.2 | Last updated: January 26, 2026*
+*Status: Release v2.4 - FULLY PLAYABLE! | Last updated: January 27, 2026*

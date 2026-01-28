@@ -1,5 +1,26 @@
 # Changelog - Penguins! Steam Deck Port
 
+## [2.4.0] - 2026-01-27 - LEVEL TRANSITION CRASH FIXED!
+
+### Fixed
+- **CRITICAL: Level transition crash FIXED!** All levels now playable!
+- Root cause identified: Wine's Gecko/mshtml has use-after-free bugs
+- Solution: Disable Gecko via `WINEDLLOVERRIDES="d3d8=n;mshtml=;gecko="`
+
+### Technical Analysis
+The WildTangent engine embeds Mozilla Gecko (XUL) for UI rendering. When transitioning between levels, Wine's implementation triggers:
+1. Null pointer write in XUL at RVA 0x60a31
+2. Use-after-free in ole32.dll at 0x6521c009 (COM vtable call on freed object)
+
+Disabling Gecko prevents these crashes without affecting gameplay - the game doesn't actually need web rendering.
+
+### Changed
+- Simplified launcher script (removed verbose debug logging)
+- Updated install.sh with crash fix
+- Updated README to reflect fully playable status
+
+---
+
 ## [0.2.0] - 2026-01-23 - GAMEPLAY VERIFIED
 
 ### Added
