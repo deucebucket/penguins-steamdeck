@@ -1,5 +1,22 @@
 # Changelog - Penguins! Steam Deck Port
 
+## [2.5.0] - 2026-01-27 - GAME MANAGER + USER PROFILES
+
+### Added
+- **PenguinsManager.sh** - Full game management tool with kdialog GUI
+  - Launch Game
+  - Manage Users (up to 4 profiles)
+  - Check for Updates (git-based)
+  - Repair/Reinstall (preserves profiles)
+- Text input helper scripts (steam_text_input.sh, username_setup.sh)
+- Default profile included in installer
+
+### Changed
+- Simplified launcher (removed broken splash screen approach)
+- Install.sh now installs manager alongside game
+
+---
+
 ## [2.4.0] - 2026-01-27 - LEVEL TRANSITION CRASH FIXED!
 
 ### Fixed

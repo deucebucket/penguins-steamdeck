@@ -1,6 +1,6 @@
 # Penguins! (2006 WildTangent) - Steam Deck Linux Port
 
-## Current Status: RELEASE v2.4 - FULLY PLAYABLE!
+## Current Status: RELEASE v2.5 - FULLY PLAYABLE!
 
 **Level transition crash FIXED!** The game now works completely - all levels playable without crashes!
 
@@ -24,6 +24,13 @@ curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/b
 1. **Switch to Game Mode** and find 'Penguins!' in your Steam library
 2. **Set controller** (first time only - see Controller Setup below)
 3. **Wait ~30-60 seconds** on black screen - the WildTangent logo will appear!
+
+### Game Manager (Optional)
+Run `PenguinsManager.sh` in Desktop Mode for:
+- 🎮 **Launch Game** - Start Penguins!
+- 👤 **Manage Users** - Create/delete up to 4 profiles
+- ⬇️ **Check Updates** - Download latest fixes
+- 📦 **Repair Install** - Reset game (preserves profiles)
 
 ---
 
