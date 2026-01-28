@@ -2,12 +2,40 @@
 # =============================================
 # Penguins! Launcher - Steam Deck Game Mode
 # =============================================
-# v2.4 - Level transition crash FIXED!
+# v2.5 - Loading splash + keyboard fixes
 
 GAME_DIR="$(cd "$(dirname "$0")" && pwd)"
 LOG_DIR="$GAME_DIR/logs"
 mkdir -p "$LOG_DIR"
 LOG_FILE="$LOG_DIR/game_$(date +%Y%m%d_%H%M%S).log"
+
+# Show splash screen while game loads (Game Mode friendly)
+show_splash() {
+    if [ -f "$GAME_DIR/splash.png" ]; then
+        # Use gwenview in fullscreen to show splash
+        gwenview --fullscreen "$GAME_DIR/splash.png" 2>/dev/null &
+        SPLASH_PID=$!
+        echo "Splash PID: $SPLASH_PID" >> "$LOG_FILE"
+    fi
+}
+
+# Kill splash when game window appears
+kill_splash() {
+    if [ -n "$SPLASH_PID" ]; then
+        # Wait for Wine window to appear
+        for i in {1..60}; do
+            if pgrep -f "penguins.exe" >/dev/null 2>&1; then
+                sleep 2  # Give game time to render
+                kill $SPLASH_PID 2>/dev/null
+                break
+            fi
+            sleep 1
+        done &
+    fi
+}
+
+# Show splash
+show_splash
 
 # Environment
 export STEAM_COMPAT_CLIENT_INSTALL_PATH="$HOME/.steam/steam"
@@ -48,6 +76,9 @@ fi
     echo "DLL Overrides: $WINEDLLOVERRIDES"
     echo "===================="
 } > "$LOG_FILE" 2>&1
+
+# Kill splash when game starts
+kill_splash
 
 # Launch game from C: drive path (required by WildTangent DRM)
 "$PROTON" run 'C:\Program Files (x86)\WildGames\Penguins!\penguins.exe' >> "$LOG_FILE" 2>&1
