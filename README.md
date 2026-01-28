@@ -69,15 +69,20 @@ curl -sL https://raw.githubusercontent.com/deucebucket/penguins-steamdeck/main/b
 - **Drag** gadgets by holding and moving your finger
 - Touch input works alongside trackpad - use whichever feels natural
 
-### Steam Keyboard (Username Entry)
+### Text Input (Username Entry)
 
-To enter a username or any text in the game:
+**Option 1: Steam Keyboard (Simple)**
+1. Click on a text field in the game
+2. **Press Steam + X** to open the on-screen keyboard
+3. Type your text and press Enter
 
-1. **Press Steam + X** to open the on-screen keyboard
-2. Type your text
-3. **Press Enter** or **Steam + X** again to close
+**Option 2: Text Input Helper (Recommended)**
+1. In Steam, go to Controller Settings for Penguins!
+2. Add a binding: **Steam + Y** → Launch `steam_text_input.sh`
+3. In-game, press Steam + Y to open a text input dialog
+4. Type your text and click OK - it will be typed into the game
 
-**Note:** A default profile is included, so you can skip creating a new profile and just use the existing one.
+**Note:** A default profile is pre-configured, so you can skip username entry entirely!
 
 ---
 

@@ -15,13 +15,10 @@ export STEAM_COMPAT_DATA_PATH="$GAME_DIR/prefix"
 export PROTON_USE_WINED3D=1
 
 # Steam overlay for keyboard input in Game Mode
-# Preload Steam overlay renderer for virtual keyboard support
-if [ -f "$HOME/.steam/steam/ubuntu12_32/gameoverlayrenderer.so" ]; then
-    export LD_PRELOAD="$HOME/.steam/steam/ubuntu12_32/gameoverlayrenderer.so${LD_PRELOAD:+:$LD_PRELOAD}"
-fi
+# Note: Overlay is injected by Steam when launched from library
+# Manual preload removed - causes ELF class mismatch errors
 
 # Enable Steam input/overlay integration
-export STEAM_OVERLAY_DEBUG=1
 export SteamGameId=penguins
 export SteamAppId=0
 
