@@ -2,7 +2,7 @@
 # ============================================
 # 🐧 Penguins! - Steam Deck One-Click Installer
 # ============================================
-# Version: 2.0.0
+# Version: 2.6.0
 # GitHub: https://github.com/deucebucket/penguins-steamdeck
 #
 # This installer handles EVERYTHING:
@@ -452,9 +452,35 @@ else
     echo -e "${YELLOW}  ⚠ Could not find Steam user - add game manually${NC}"
 fi
 
-# Create desktop shortcut
-DESKTOP_FILE="$HOME/Desktop/Penguins.desktop"
-cat > "$DESKTOP_FILE" << DESKTOP
+# Create manager wrapper script
+cat > "$INSTALL_DIR/PenguinsManager.sh" << 'MANAGER_WRAPPER'
+#!/bin/bash
+# Penguins! Game Manager - Shell wrapper
+cd "$(dirname "$0")"
+exec /usr/bin/python3 PenguinsManager.py
+MANAGER_WRAPPER
+chmod +x "$INSTALL_DIR/PenguinsManager.sh"
+
+# Create MANAGER desktop shortcut (primary entry point)
+MANAGER_DESKTOP="$HOME/Desktop/Penguins Manager.desktop"
+cat > "$MANAGER_DESKTOP" << DESKTOP
+[Desktop Entry]
+Name=Penguins! Manager
+Comment=Manage profiles and launch Penguins!
+Exec=$INSTALL_DIR/PenguinsManager.sh
+Icon=$INSTALL_DIR/Penguins.ico
+Terminal=false
+Type=Application
+Categories=Game;
+DESKTOP
+chmod +x "$MANAGER_DESKTOP" 2>/dev/null || true
+# Mark as trusted for KDE
+gio set "$MANAGER_DESKTOP" metadata::trusted true 2>/dev/null || true
+echo -e "${GREEN}  ✓ Manager desktop shortcut created${NC}"
+
+# Create direct game shortcut too (for Game Mode)
+GAME_DESKTOP="$HOME/Desktop/Penguins.desktop"
+cat > "$GAME_DESKTOP" << DESKTOP
 [Desktop Entry]
 Name=Penguins!
 Comment=WildTangent Puzzle Game (2006)
@@ -464,8 +490,9 @@ Terminal=false
 Type=Application
 Categories=Game;
 DESKTOP
-chmod +x "$DESKTOP_FILE" 2>/dev/null || true
-echo -e "${GREEN}  ✓ Desktop shortcut created${NC}"
+chmod +x "$GAME_DESKTOP" 2>/dev/null || true
+gio set "$GAME_DESKTOP" metadata::trusted true 2>/dev/null || true
+echo -e "${GREEN}  ✓ Game desktop shortcut created${NC}"
 
 # ============================================
 # STEP 8: First run initialization
@@ -557,24 +584,24 @@ echo -e "${GREEN}╚════════════════════
 echo ""
 echo -e "${CYAN}Game installed to:${NC} $INSTALL_DIR"
 echo ""
-echo -e "${YELLOW}▶ TO PLAY:${NC}"
-echo "  • Game Mode (RECOMMENDED): Find 'Penguins!' in your Steam library"
-echo "  • Desktop Mode: Double-click the desktop shortcut"
+echo -e "${YELLOW}▶ FIRST TIME SETUP (REQUIRED):${NC}"
+echo "  1. Open 'Penguins! Manager' from your desktop"
+echo "  2. Create a profile (click an empty slot, enter your name)"
+echo "  3. Click 'Launch Game'"
+echo ""
+echo -e "${YELLOW}▶ TO PLAY AFTER SETUP:${NC}"
+echo "  • Game Mode: Find 'Penguins!' in your Steam library"
+echo "  • Desktop Mode: Use 'Penguins! Manager' shortcut"
 echo ""
 echo -e "${YELLOW}▶ NOTE:${NC}"
 echo "  The game shows a BLACK SCREEN for ~30-60 seconds on startup."
 echo "  This is normal! Wait for the WildTangent logo to appear."
 echo ""
-echo -e "${YELLOW}▶ CONTROLLER SETUP (first time only):${NC}"
+echo -e "${YELLOW}▶ CONTROLLER SETUP (Game Mode):${NC}"
 echo "  1. Select Penguins! in Game Mode"
 echo "  2. Press Steam button → Controller Settings"
 echo "  3. Choose 'Gamepad with Mouse Trackpad' template"
 echo ""
-echo -e "${YELLOW}▶ CONTROLS:${NC}"
-echo "  Touch Screen → Tap to click"
-echo "  Right Pad    → Mouse cursor"
-echo "  R2 Trigger   → Left click"
-echo ""
 echo -e "${BLUE}Report bugs: https://github.com/deucebucket/penguins-steamdeck/issues${NC}"
 echo ""
-echo -e "${GREEN}Ready to play! Switch to Game Mode and have fun! 🐧${NC}"
+echo -e "${GREEN}Now open 'Penguins! Manager' to create a profile and play! 🐧${NC}"
